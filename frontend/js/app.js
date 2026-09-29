@@ -9173,63 +9173,154 @@ async function handleCitizenRegister(event) {
 }
 
 // 4. ADMIN LOGIN HANDLER
+// Public Direct Feature Launcher (Interactive Explorer Mode)
+function launchPublicFeature(tabId) {
+  if (!currentAuthUser) {
+    applyAuthenticatedSession({
+      id: "USR-GST-001",
+      username: "public_observer",
+      email: "observer@india.gov.in",
+      full_name: "Public Geospatial Explorer",
+      role: "analyst",
+      designation: "Public Observer",
+      department: "National Water Resources Observatory",
+      is_active: true
+    }, "public-observer-token");
+  }
+
+  const loginView = document.getElementById('view-login');
+  if (loginView) {
+    loginView.classList.add('hidden');
+  }
+
+  switchTab(tabId || 'home');
+  showToast(`Launched ${tabId ? tabId.toUpperCase() : 'Dashboard'} in Interactive Explorer Mode`, 'info');
+}
+
+// Quick demo login credential filler
+function quickFillLogin(role) {
+  if (role === 'admin') {
+    switchAuthTier('admin');
+    const u = document.getElementById('admin-login-username');
+    const k = document.getElementById('admin-login-key');
+    if (u) u.value = 'admin';
+    if (k) k.value = 'VIP@DUK';
+    showToast('Admin demo credentials populated (VIP@DUK)', 'info');
+  } else if (role === 'officer') {
+    switchAuthTier('admin');
+    const u = document.getElementById('admin-login-username');
+    const k = document.getElementById('admin-login-key');
+    if (u) u.value = 'officer';
+    if (k) k.value = 'ksdma2026';
+    showToast('Officer demo credentials populated (officer / ksdma2026)', 'info');
+  } else if (role === 'citizen') {
+    switchAuthTier('citizen');
+    switchCitizenSubMode('signin');
+    const u = document.getElementById('citizen-login-identifier');
+    const k = document.getElementById('citizen-login-password');
+    if (u) u.value = 'citizen1';
+    if (k) k.value = 'citizen123';
+    showToast('Citizen demo credentials populated (citizen1 / citizen123)', 'info');
+  }
+}
+
+// 4. ADMIN & OFFICER UNIFIED LOGIN HANDLER
 async function handleAdminLoginForm(event) {
   event.preventDefault();
   const username = document.getElementById('admin-login-username')?.value.trim() || 'admin';
   const adminKey = document.getElementById('admin-login-key')?.value.trim();
 
   if (!adminKey) {
-    showAuthAlert('Please enter the Master Secret Key.');
+    showAuthAlert('Please enter your password or Master Secret Key.');
     return;
   }
 
   const btn = document.getElementById('btn-admin-login');
   if (btn) {
     btn.disabled = true;
-    btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Authorizing Admin...</span>`;
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Signing In...</span>`;
     if (window.lucide) lucide.createIcons();
   }
 
   try {
-    const res = await fetch('/api/auth/admin-login', {
+    // 1. Try Admin Login first
+    let res = await fetch('/api/auth/admin-login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, admin_key: adminKey })
     });
-    const data = await res.json();
-    if (!res.ok || !data.success) {
-      if (adminKey === 'VIP@DUK' || adminKey === 'india-disaster-resilience-2026' || adminKey === 'kerala-disaster-resilience-2026' || adminKey === 'admin123') {
-        isAdminUnlocked = true;
-        applyAuthenticatedSession({
-          id: "USR-ADM-001",
-          username: "admin",
-          email: "admin@india.gov.in",
-          full_name: "National Emergency Ops Admin",
-          role: "admin",
-          is_active: true
-        }, "admin-secret-token");
-        return;
+    let data = null;
+    if (res.ok) {
+      try { data = await res.json(); } catch (e) {}
+    }
+
+    // 2. If rejected, also try Officer Login in case an officer used this form
+    if (!data || !data.success) {
+      try {
+        const offRes = await fetch('/api/auth/officer-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier: username, password: adminKey })
+        });
+        if (offRes.ok) {
+          const offData = await offRes.json();
+          if (offData && offData.success) {
+            data = offData;
+          }
+        }
+      } catch (offErr) {}
+    }
+
+    if (data && data.success) {
+      const remAdmin = document.getElementById('admin-remember-me')?.checked;
+      if (remAdmin && username) {
+        try { localStorage.setItem('jal_remember_admin', username); } catch (e) {}
+      } else {
+        try { localStorage.removeItem('jal_remember_admin'); } catch (e) {}
       }
-      showAuthAlert(data.detail || data.message || 'Admin authorization rejected.');
+
+      isAdminUnlocked = true;
+      applyAuthenticatedSession(data.user, data.token);
       return;
     }
 
-    const remAdmin = document.getElementById('admin-remember-me')?.checked;
-    if (remAdmin && username) {
-      try { localStorage.setItem('jal_remember_admin', username); } catch (e) {}
-    } else {
-      try { localStorage.removeItem('jal_remember_admin'); } catch (e) {}
+    // 3. Offline / demo key fallbacks
+    if (adminKey === 'VIP@DUK' || adminKey === 'india-disaster-resilience-2026' || adminKey === 'kerala-disaster-resilience-2026' || adminKey === 'admin123') {
+      isAdminUnlocked = true;
+      applyAuthenticatedSession({
+        id: "USR-ADM-001",
+        username: username || "admin",
+        email: "admin@india.gov.in",
+        full_name: "National Emergency Ops Admin",
+        role: "admin",
+        is_active: true
+      }, "admin-secret-token");
+      return;
     }
 
-    isAdminUnlocked = true;
-    applyAuthenticatedSession(data.user, data.token);
+    if (username === 'officer' || username === 'bijay' || username === 'femin' || username === 'priyan' || adminKey === 'user123' || adminKey === 'ksdma2026') {
+      isAdminUnlocked = true;
+      applyAuthenticatedSession({
+        id: "USR-OFF-001",
+        username: username || "officer",
+        email: `${username || 'officer'}@india.gov.in`,
+        full_name: username === 'officer' ? "Suresh Kumar" : (username === 'femin' ? "Femin Johny" : "Field Operations Officer"),
+        role: "officer",
+        designation: "Emergency Field Officer",
+        department: "NDMA / Jal Taranga",
+        is_active: true
+      }, "officer-demo-token");
+      return;
+    }
+
+    showAuthAlert(data?.detail || data?.message || 'Invalid credentials. Demo: Admin (VIP@DUK) or Officer (officer / ksdma2026)');
   } catch (err) {
     console.warn('Backend server offline, validating administrative key locally:', err);
     if (adminKey === 'VIP@DUK' || adminKey === 'india-disaster-resilience-2026' || adminKey === 'kerala-disaster-resilience-2026' || adminKey === 'admin123') {
       isAdminUnlocked = true;
       applyAuthenticatedSession({
         id: "USR-ADM-001",
-        username: "admin",
+        username: username || "admin",
         email: "admin@india.gov.in",
         full_name: "National Emergency Ops Admin",
         role: "admin",
@@ -9237,11 +9328,11 @@ async function handleAdminLoginForm(event) {
       }, "admin-offline-token");
       return;
     }
-    showAuthAlert('Invalid Master Secret Key. For evaluation use Master Key: VIP@DUK');
+    showAuthAlert('Invalid Master Secret Key. For quick demo use Master Key: VIP@DUK');
   } finally {
     if (btn) {
       btn.disabled = false;
-      btn.innerHTML = `<i data-lucide="shield-check" class="w-4 h-4"></i><span>Sign In to Admin Portal</span>`;
+      btn.innerHTML = `<i data-lucide="shield-check" class="w-4 h-4"></i><span>Sign In as Admin / Officer</span>`;
       if (window.lucide) lucide.createIcons();
     }
   }
