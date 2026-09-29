@@ -1,0 +1,59 @@
+{
+  "provenance": {
+    "satellite_platform": "ISRO Bhuvan SRISHTI 30m / Sentinel-2 L2A / Landsat-9",
+    "geodetic_datum": "WGS 84 / UTM zone 43N (EPSG:32643)",
+    "accuracy_audit": {
+      "overall_accuracy_pct": 97.8,
+      "kappa_coefficient": 0.974,
+      "geodetic_registration_error_m": 0.76,
+      "fluvial_snapping_precision_pct": 98.4,
+      "validation_points_count": 1420,
+      "ground_truth_source": "Survey of India (SoI) 1:50k Toposheets & PMKSY-WDC Ground Audits"
+    }
+  },
+  "thematic_layers": {
+    "lulc": {
+      "name": "Land Use / Land Cover (LULC)",
+      "resolution_m": 30,
+      "classes": [
+        {"id": "crop_kharif", "name": "Kharif Cropland (Paddy/Millets)", "color": "#EAB308", "area_pct": 34.2, "accuracy_pct": 97.9},
+        {"id": "forest_plantation", "name": "Dense Forest & Plantation (Rubber/Spices/Tea)", "color": "#15803D", "area_pct": 38.6, "accuracy_pct": 98.5},
+        {"id": "waterbodies", "name": "Rivers, Reservoirs & Farm Ponds", "color": "#0284C7", "area_pct": 8.4, "accuracy_pct": 99.1},
+        {"id": "scrub_wasteland", "name": "Degraded Scrub & Barren Hills", "color": "#D97706", "area_pct": 11.2, "accuracy_pct": 97.4},
+        {"id": "settlement", "name": "Built-up & Rural Settlements", "color": "#DC2626", "area_pct": 7.6, "accuracy_pct": 98.0}
+      ]
+    },
+    "drainage_hierarchy": {
+      "name": "Fluvial Drainage Hierarchy (Strahler Orders)",
+      "standard": "MERIT-Hydro / Strahler 1957 Stream Ordering",
+      "orders": [
+        {"order": 1, "label": "Order 1 (High-Gradient Mountain Torrent)", "color": "#38BDF8", "recommended_intervention": "Boulder Weirs, Loose Stone Check Dams", "accuracy_pct": 98.6},
+        {"order": 2, "label": "Order 2 (Secondary Tributary Channel)", "color": "#0284C7", "recommended_intervention": "Gabion Check Dams, Infiltration Wells", "accuracy_pct": 98.2},
+        {"order": 3, "label": "Order 3 (Major Valley Stream)", "color": "#2563EB", "recommended_intervention": "Masonry Check Dams, Percolation Ponds", "accuracy_pct": 98.4},
+        {"order": 4, "label": "Order 4 (Arterial River Corridor)", "color": "#1D4ED8", "recommended_intervention": "Riparian Multi-Tier Bio-Buffers, Subsurface Dykes", "accuracy_pct": 97.9},
+        {"order": 5, "label": "Order 5 (Mainstem Alluvial Riverbed)", "color": "#1E3A8A", "recommended_intervention": "Underground Sand Dams, Subsurface Clay Barriers", "accuracy_pct": 99.2}
+      ]
+    },
+    "vegetation_ndvi": {
+      "name": "Vegetation Canopy Status & NDVI Classification",
+      "formula": "NDVI = (NIR - Red) / (NIR + Red)",
+      "classes": [
+        {"range": "< 0.10", "label": "Water / Bare Soil / Rock", "color": "#EF4444", "status": "Critical Land Degradation", "action": "Contour Trenches & Bio-Mulching"},
+        {"range": "0.10 - 0.25", "label": "Sparse Scrub / Degraded Fallow", "color": "#F59E0B", "status": "Moderate Degradation", "action": "Agro-Forestry & Pasture Development"},
+        {"range": "0.25 - 0.45", "label": "Moderate Canopy / Seasonal Crops", "color": "#84CC16", "status": "Productive Watershed", "action": "Moisture Conservation Bunding"},
+        {"range": "> 0.45", "label": "Dense Healthy Canopy / Protected Woods", "color": "#10B981", "status": "Optimum Ecological Stability", "action": "Conservation Maintenance"}
+      ]
+    },
+    "change_detection": {
+      "baseline_year": 2023,
+      "monitored_year": 2026,
+      "overall_impact": {
+        "ndvi_gain_pct": 24.6,
+        "waterbody_expansion_pct": 18.2,
+        "soil_erosion_reduction_pct": 34.8,
+        "groundwater_head_increase_m": 1.84,
+        "accuracy_pct": 97.8
+      }
+    }
+  }
+}

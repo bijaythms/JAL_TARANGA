@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Cochin International Airport (COK / Nedumbassery)",
+    "lat": 10.155,
+    "lng": 76.402,
+    "radius_km": 6.5,
+    "category": "Critical International Aviation Infrastructure (Periyar Floodplain)",
+    "hazard": "Riverine flood overspill from Chengalthodu & Periyar river confluences; active runway runoff obstruction.",
+    "note": "Civil restructuring, earthen detention ponds, and contour trenching are strictly prohibited within active airport operational areas."
+  },
+  {
+    "name": "Trivandrum International Airport (TRV / Shanghumugham)",
+    "lat": 8.482,
+    "lng": 76.92,
+    "radius_km": 4.5,
+    "category": "Critical Coastal Aviation Facility",
+    "hazard": "High coastal tidal surge, severe Shanghumugham beach scouring, and Parvathy Puthanar drainage bottlenecks.",
+    "note": "Aero-certified runway drainage must comply with statutory DGCA guidelines; earthen watershed interventions prohibited."
+  },
+  {
+    "name": "Calicut International Airport (CCJ / Karipur)",
+    "lat": 11.136,
+    "lng": 75.955,
+    "radius_km": 4.0,
+    "category": "Engineered Tabletop Airport Runway Plateau",
+    "hazard": "Gorge-edge slope wash and steep peripheral embankment failure under torrential monsoonal downpours.",
+    "note": "Tabletop safety buffer; earthwork excavation and check dam installation strictly prohibited on flight approach surfaces."
+  },
+  {
+    "name": "Kannur International Airport (CNN / Mattannur)",
+    "lat": 11.918,
+    "lng": 75.548,
+    "radius_km": 4.5,
+    "category": "Highland Graded Runway Complex",
+    "hazard": "Perimeter hillside erosion and high-velocity valley drainage discharge.",
+    "note": "Critical security and commercial transport property; surface contour alterations prohibited."
+  },
+  {
+    "name": "Kochi Port & Vallarpadam ICTT Terminal",
+    "lat": 9.98,
+    "lng": 76.26,
+    "radius_km": 5.0,
+    "category": "Strategic Maritime Container Port & Naval Harbor",
+    "hazard": "Estuarine tidal surge inundation and continuous backwater silt sedimentation at Vembanad confluence.",
+    "note": "Heavy commercial logistics facility; bio-earthen watershed structures inapplicable within port boundaries."
+  },
+  {
+    "name": "Technopark Trivandrum Campus (Phases 1-4)",
+    "lat": 8.558,
+    "lng": 76.882,
+    "radius_km": 3.0,
+    "category": "High-Density Technology Park & Institutional Real Estate",
+    "hazard": "Urban stormwater flash accumulation and Thettiyar canal drainage choke points.",
+    "note": "High-density institutional urban footprint; interventions limited to internal subsurface storm drainage."
+  },
+  {
+    "name": "Idukki Arch Dam & Hydroelectric Headworks",
+    "lat": 9.851,
+    "lng": 76.974,
+    "radius_km": 5.5,
+    "category": "Strategic National Hydroelectric Dam Complex",
+    "hazard": "Extreme reservoir stage surge and Kuravan-Kurathi granite gorge slope saturation.",
+    "note": "Strategic national security installation; landscape topography cannot be modified."
+  }
+]

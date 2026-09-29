@@ -1,0 +1,58 @@
+[
+  {
+    "id": "USR-OFF-004",
+    "username": "priyan",
+    "email": "priyan@gmail.com",
+    "full_name": "priyadarsan",
+    "role": "officer",
+    "designation": "Field Operations Officer",
+    "department": "Rapid Incident Assessment Unit",
+    "password_hash": "da0f833250e9c21cd9dae3de917864bd6478b6611470bfa7203e024891c9a82b",
+    "salt": "882a7c2f8a01dd3d82789e28f4dea070",
+    "is_active": true,
+    "created_at": "2026-09-29 15:27:59.740254+05:30",
+    "last_login": "2026-09-29 15:29:51.705891+05:30"
+  },
+  {
+    "id": "USR-OFF-003",
+    "username": "aqeeb",
+    "email": "aqeeb@gmail.com",
+    "full_name": "M Aqeeb Baba",
+    "role": "analyst",
+    "designation": "Senior Hydrological Analyst",
+    "department": "River Basin Catchment Division",
+    "password_hash": "4426477f0667a37e8e4d09a6723b0d6d9f52a9d803fc5c3abb3450953ec55539",
+    "salt": "7276da7858e389f77c08da0a58d817c0",
+    "is_active": true,
+    "created_at": "2026-09-29 15:27:59.740254+05:30",
+    "last_login": "2026-09-29 15:31:06.815098+05:30"
+  },
+  {
+    "id": "USR-OFF-002",
+    "username": "femin",
+    "email": "femin@gmail.com",
+    "full_name": "Femin Johny",
+    "role": "officer",
+    "designation": "Emergency Response Officer",
+    "department": "Disaster Operations & Field Triage Unit",
+    "password_hash": "42ee9d1b5ee037deec2714503c66c49b0e4feeb3d22d0592beabd84529439f85",
+    "salt": "5db9567fe509412c96bc913f7284264f",
+    "is_active": true,
+    "created_at": "2026-09-29 15:27:59.740254+05:30",
+    "last_login": "2026-09-29 15:55:05.142701+05:30"
+  },
+  {
+    "id": "USR-OFF-001",
+    "username": "bijay",
+    "email": "bijay@gmail.com",
+    "full_name": "Bijay Thomas",
+    "role": "analyst",
+    "designation": "Lead Geospatial Analyst",
+    "department": "National Remote Sensing & GIS Division",
+    "password_hash": "c5b46121ad5b78f51c9ff897547bff7b1015269dc5d3bcd924a107d0d3a17b71",
+    "salt": "e5a0e10315ffb506008366dbae491d76",
+    "is_active": true,
+    "created_at": "2026-09-29 15:27:59.740254+05:30",
+    "last_login": "2026-09-29 19:50:56.099919+05:30"
+  }
+]
