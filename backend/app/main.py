@@ -102,6 +102,9 @@ if frontend_path.exists():
         app.mount("/js", StaticFiles(directory=str(js_dir)), name="js")
     if images_dir.exists():
         app.mount("/images", StaticFiles(directory=str(images_dir)), name="images")
+    data_dir = frontend_path / "data"
+    if data_dir.exists():
+        app.mount("/data", StaticFiles(directory=str(data_dir)), name="data")
 
 
 @app.get("/favicon.ico", include_in_schema=False)

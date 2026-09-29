@@ -1,17 +1,17 @@
 [
   {
-    "id": "USR-OFF-004",
-    "username": "priyan",
-    "email": "priyan@gmail.com",
-    "full_name": "priyadarsan",
+    "id": "USR-OFF-002",
+    "username": "femin",
+    "email": "femin@gmail.com",
+    "full_name": "Femin Johny",
     "role": "officer",
-    "designation": "Field Operations Officer",
-    "department": "Rapid Incident Assessment Unit",
-    "password_hash": "da0f833250e9c21cd9dae3de917864bd6478b6611470bfa7203e024891c9a82b",
-    "salt": "882a7c2f8a01dd3d82789e28f4dea070",
+    "designation": "Emergency Response Officer",
+    "department": "Disaster Operations & Field Triage Unit",
+    "password_hash": "42ee9d1b5ee037deec2714503c66c49b0e4feeb3d22d0592beabd84529439f85",
+    "salt": "5db9567fe509412c96bc913f7284264f",
     "is_active": true,
     "created_at": "2026-09-29 15:27:59.740254+05:30",
-    "last_login": "2026-09-29 15:29:51.705891+05:30"
+    "last_login": "2026-09-29 21:13:59.566184+05:30"
   },
   {
     "id": "USR-OFF-003",
@@ -28,18 +28,18 @@
     "last_login": "2026-09-29 15:31:06.815098+05:30"
   },
   {
-    "id": "USR-OFF-002",
-    "username": "femin",
-    "email": "femin@gmail.com",
-    "full_name": "Femin Johny",
+    "id": "USR-OFF-004",
+    "username": "priyan",
+    "email": "priyan@gmail.com",
+    "full_name": "priyadarsan",
     "role": "officer",
-    "designation": "Emergency Response Officer",
-    "department": "Disaster Operations & Field Triage Unit",
-    "password_hash": "42ee9d1b5ee037deec2714503c66c49b0e4feeb3d22d0592beabd84529439f85",
-    "salt": "5db9567fe509412c96bc913f7284264f",
+    "designation": "Field Operations Officer",
+    "department": "Rapid Incident Assessment Unit",
+    "password_hash": "da0f833250e9c21cd9dae3de917864bd6478b6611470bfa7203e024891c9a82b",
+    "salt": "882a7c2f8a01dd3d82789e28f4dea070",
     "is_active": true,
     "created_at": "2026-09-29 15:27:59.740254+05:30",
-    "last_login": "2026-09-29 15:55:05.142701+05:30"
+    "last_login": "2026-09-29 23:30:19.532272+05:30"
   },
   {
     "id": "USR-OFF-001",
@@ -53,6 +53,6 @@
     "salt": "e5a0e10315ffb506008366dbae491d76",
     "is_active": true,
     "created_at": "2026-09-29 15:27:59.740254+05:30",
-    "last_login": "2026-09-29 16:08:33.765108+05:30"
+    "last_login": "2026-09-29 20:49:45.005422+05:30"
   }
 ]

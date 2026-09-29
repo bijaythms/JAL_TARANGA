@@ -2419,79 +2419,116 @@ async function renderAdminDashboard() {
     url += `?reporter_role=${roleFilter}`;
   }
 
+  let data = null;
   try {
     const res = await fetch(url);
-    const data = await res.json();
-    const totalEl = document.getElementById('admin-count-total');
-    if (totalEl) totalEl.innerText = data.total;
-
-    const tbody = document.getElementById('admin-reports-table');
-    if (!tbody) return;
-
-    tbody.innerHTML = data.reports
-      .map(
-        (r) => {
-          const reporterBadge = r.reporter_role === 'officer'
-            ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1 w-max"><i data-lucide="shield" class="w-3 h-3"></i> Officer: ${r.reporter_name || 'Official'}</span>`
-            : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-800 flex items-center gap-1 w-max"><i data-lucide="user" class="w-3 h-3"></i> Citizen: ${r.reporter_name || 'Citizen'}</span>`;
-
-          return `
-      <tr class="hover:bg-vellam-bg transition" id="row-${r.id}">
-        <td class="p-3 font-mono text-vellam-cyan font-bold">${r.id}</td>
-        <td class="p-3">${reporterBadge}</td>
-        <td class="p-3">
-          <span class="font-bold text-white block">${r.district}</span>
-          <span class="text-[10px] text-slate-400 font-mono">${r.location_name || '—'}</span>
-        </td>
-        <td class="p-3 text-slate-300">${r.category}</td>
-        <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono ${r.severity === 'Critical' ? 'bg-red-950 text-red-300 border border-red-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}">${r.severity}</span></td>
-        <td class="p-3 text-emerald-400 font-mono text-xs">${r.email || 'Confidential'}</td>
-        <td class="p-3 text-slate-300 max-w-xs truncate">${r.desc}</td>
-        <td class="p-3">
-          ${
-            r.image
-              ? `
-            <div class="relative group cursor-pointer" onclick="openAdminPhotoModal('${r.image}', '${r.id}', '${r.district}')">
-              <img src="${r.image}" class="h-10 w-14 object-cover rounded border border-vellam-border hover:border-vellam-cyan transition">
-              <div class="absolute inset-0 bg-black/40 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-white"></i>
-              </div>
-            </div>`
-              : '<span class="text-vellam-muted text-[10px]">No Photo</span>'
-          }
-        </td>
-        <td class="p-3 font-mono" id="status-cell-${r.id}">
-          ${getStatusBadgeHtml(r.status)}
-        </td>
-        <td class="p-3 text-right">
-          <div class="flex items-center justify-end gap-2">
-            <!-- Update Status & Remarks Modal Trigger -->
-            <button onclick="openStatusUpdateModal('${r.id}', '${escapeAttr(r.category)}', '${escapeAttr(r.status || '')}', '${escapeAttr(r.remarks || '')}', '${escapeAttr(r.assigned_to || '')}')" title="Update Status & Dispatch Remarks" class="px-2.5 py-1 rounded bg-cyan-950/60 border border-cyan-700 text-cyan-300 hover:bg-cyan-900/60 text-xs font-semibold flex items-center gap-1 transition">
-              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-              <span>Action</span>
-            </button>
-
-            <!-- ADMIN DELETE ACTION BUTTON -->
-            <button onclick="adminDeleteReport('${r.id}')" title="Delete Unwanted Report" class="p-1.5 rounded bg-red-950/40 border border-red-800 text-red-400 hover:bg-red-900/60 hover:text-white transition">
-              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-            </button>
-          </div>
-        </td>
-      </tr>
-    `;
-        }
-      )
-      .join('');
-    if (window.lucide) lucide.createIcons();
-    loadAdminUsersTable();
+    if (res.ok) {
+      data = await res.json();
+    }
   } catch (err) {
-    console.error('Error rendering admin dashboard:', err);
+    console.warn('API /api/admin/reports unreachable, checking static fallback:', err);
   }
+
+  if (!data || !data.reports) {
+    try {
+      const fbRes = await fetch('data/reports.json');
+      if (fbRes.ok) {
+        const raw = await fbRes.json();
+        data = Array.isArray(raw) ? { total: raw.length, reports: raw } : raw;
+      }
+    } catch (fbErr) {
+      console.warn('Reports fallback failed:', fbErr);
+    }
+  }
+
+  data = data || { total: 0, reports: [] };
+  let reports = data.reports || [];
+  if (roleFilter && roleFilter !== 'all') {
+    reports = reports.filter(r => (r.reporter_role || '').toLowerCase() === roleFilter.toLowerCase());
+  }
+
+  const totalEl = document.getElementById('admin-count-total');
+  if (totalEl) totalEl.innerText = reports.length;
+
+  const critCards = document.querySelectorAll('#view-admin .text-2xl.text-red-400');
+  if (critCards.length > 0) {
+    const critCount = reports.filter(r => r.severity === 'Critical').length;
+    critCards[0].innerText = critCount;
+  }
+
+  const tbody = document.getElementById('admin-reports-table');
+  if (tbody) {
+    if (reports.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="10" class="p-6 text-center text-slate-400 text-xs">No reports found matching criteria in the database.</td></tr>`;
+    } else {
+      tbody.innerHTML = reports
+        .map(
+          (r) => {
+            const reporterBadge = r.reporter_role === 'officer'
+              ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1 w-max"><i data-lucide="shield" class="w-3 h-3"></i> Officer: ${r.reporter_name || 'Official'}</span>`
+              : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-800 flex items-center gap-1 w-max"><i data-lucide="user" class="w-3 h-3"></i> Citizen: ${r.reporter_name || 'Citizen'}</span>`;
+
+            return `
+        <tr class="hover:bg-vellam-bg transition" id="row-${r.id}">
+          <td class="p-3 font-mono text-vellam-cyan font-bold">${r.id}</td>
+          <td class="p-3">${reporterBadge}</td>
+          <td class="p-3">
+            <span class="font-bold text-white block">${r.district}</span>
+            <span class="text-[10px] text-slate-400 font-mono">${r.location_name || '—'}</span>
+          </td>
+          <td class="p-3 text-slate-300">${r.category}</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono ${r.severity === 'Critical' ? 'bg-red-950 text-red-300 border border-red-800' : 'bg-amber-950 text-amber-300 border border-amber-800'}">${r.severity}</span></td>
+          <td class="p-3 text-emerald-400 font-mono text-xs">${r.email || 'Confidential'}</td>
+          <td class="p-3 text-slate-300 max-w-xs truncate">${r.desc}</td>
+          <td class="p-3">
+            ${
+              r.image
+                ? `
+              <div class="relative group cursor-pointer" onclick="openAdminPhotoModal('${r.image}', '${r.id}', '${r.district}')">
+                <img src="${r.image}" class="h-10 w-14 object-cover rounded border border-vellam-border hover:border-vellam-cyan transition">
+                <div class="absolute inset-0 bg-black/40 rounded flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                  <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-white"></i>
+                </div>
+              </div>`
+                : '<span class="text-vellam-muted text-[10px]">No Photo</span>'
+            }
+          </td>
+          <td class="p-3 font-mono" id="status-cell-${r.id}">
+            ${getStatusBadgeHtml(r.status)}
+          </td>
+          <td class="p-3 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <!-- Update Status & Remarks Modal Trigger -->
+              <button onclick="openStatusUpdateModal('${r.id}', '${escapeAttr(r.category)}', '${escapeAttr(r.status || '')}', '${escapeAttr(r.remarks || '')}', '${escapeAttr(r.assigned_to || '')}')" title="Update Status & Dispatch Remarks" class="px-2.5 py-1 rounded bg-cyan-950/60 border border-cyan-700 text-cyan-300 hover:bg-cyan-900/60 text-xs font-semibold flex items-center gap-1 transition">
+                <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                <span>Action</span>
+              </button>
+
+              <!-- ADMIN DELETE ACTION BUTTON -->
+              <button onclick="adminDeleteReport('${r.id}')" title="Delete Unwanted Report" class="p-1.5 rounded bg-red-950/40 border border-red-800 text-red-400 hover:bg-red-900/60 hover:text-white transition">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+          }
+        )
+        .join('');
+    }
+  }
+  if (window.lucide) lucide.createIcons();
+  loadAdminUsersTable();
 }
 
 function escapeAttr(str) {
   if (!str) return '';
-  return String(str).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  return String(str)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '&quot;')
+    .replace(/\r/g, '')
+    .replace(/\n/g, ' ');
 }
 
 async function loadAdminUsersTable() {
@@ -2499,21 +2536,35 @@ async function loadAdminUsersTable() {
   const badge = document.getElementById('admin-users-badge');
   if (!tbody) return;
 
+  let data = null;
   try {
     const res = await fetch('/api/admin/users');
-    if (!res.ok) {
-      tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-red-400 text-xs">Failed to load PostgreSQL user registry (HTTP ${res.status}).</td></tr>`;
-      return;
+    if (res.ok) {
+      data = await res.json();
     }
-    const data = await res.json();
-    if (badge && data.counts) {
-      badge.innerHTML = `<span class="text-emerald-400 font-bold">${data.total || 0} Registered Users</span> (${data.counts.citizens || 0} Citizens • ${data.counts.officers || 0} Officers • ${data.counts.admins || 0} Admins)`;
-    }
+  } catch (err) {
+    console.warn('API /api/admin/users unreachable, checking static fallback:', err);
+  }
 
-    if (!data.users || data.users.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-vellam-muted text-xs">No registered users found in PostgreSQL database.</td></tr>`;
-      return;
+  if (!data || !data.users) {
+    try {
+      const fbRes = await fetch('data/users.json');
+      if (fbRes.ok) {
+        data = await fbRes.json();
+      }
+    } catch (fbErr) {
+      console.warn('Users fallback failed:', fbErr);
     }
+  }
+
+  if (!data || !data.users || data.users.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-400 text-xs">No registered users found in PostgreSQL database.</td></tr>`;
+    return;
+  }
+
+  if (badge && data.counts) {
+    badge.innerHTML = `<span class="text-emerald-400 font-bold">${data.total || data.users.length} Registered Users</span> (${data.counts.citizens || 0} Citizens • ${data.counts.officers || 0} Officers • ${data.counts.admins || 0} Admins)`;
+  }
 
     tbody.innerHTML = data.users.map((u) => {
       let tierBadge = '';
@@ -9334,7 +9385,9 @@ function applyAuthenticatedSession(user, token) {
 
   try {
     sessionStorage.setItem('vellam_auth_user', JSON.stringify(user));
-    sessionStorage.setItem('vellam_auth_token', token);
+    sessionStorage.setItem('vellam_auth_token', token || '');
+    localStorage.setItem('vellam_auth_user', JSON.stringify(user));
+    localStorage.setItem('vellam_auth_token', token || '');
   } catch (e) {}
 
 
@@ -9525,13 +9578,21 @@ async function handleLogout() {
 }
 
 function checkAuthSession() {
-  // Always ensure opening or pasting the link directly displays the full-screen login page
+  let savedUser = null;
+  let savedToken = null;
   try {
-    localStorage.removeItem('vellam_auth_user');
-    localStorage.removeItem('vellam_auth_token');
-    sessionStorage.removeItem('vellam_auth_user');
-    sessionStorage.removeItem('vellam_auth_token');
+    const raw = sessionStorage.getItem('vellam_auth_user') || localStorage.getItem('vellam_auth_user');
+    if (raw) savedUser = JSON.parse(raw);
+    savedToken = sessionStorage.getItem('vellam_auth_token') || localStorage.getItem('vellam_auth_token');
   } catch (e) {}
+
+  if (savedUser && savedUser.id) {
+    applyAuthenticatedSession(savedUser, savedToken);
+    if (savedUser.role === 'admin' || isAdminUnlocked) {
+      renderAdminDashboard();
+    }
+    return true;
+  }
 
   currentAuthUser = null;
   currentAuthToken = null;
