@@ -1,0 +1,94 @@
+{
+  "agency": "Ministry of Rural Development (DoLR) / Central Water Commission (CWC)",
+  "framework": "PMKSY-WDC National Geospatial Framework",
+  "accuracy_standard": "97.4% - 98.8% Geodetic & Fluvial Snapping Accuracy",
+  "states": [
+    {
+      "id": "KL",
+      "name": "Kerala",
+      "zone": "Humid Western Ghats & Coastal Delta",
+      "mean_annual_rainfall_mm": 3107,
+      "center": [10.5, 76.2],
+      "zoom": 8,
+      "major_basins": [
+        {"id": "WS-PERIYAR", "name": "Periyar River Basin", "area_km2": 5398, "c_runoff": 0.82, "stream_accuracy_pct": 98.6},
+        {"id": "WS-BHARATHA", "name": "Bharathapuzha (Nila) Basin", "area_km2": 6186, "c_runoff": 0.74, "stream_accuracy_pct": 98.4},
+        {"id": "WS-PAMBA", "name": "Pamba River Basin", "area_km2": 2235, "c_runoff": 0.85, "stream_accuracy_pct": 99.1},
+        {"id": "WS-CHALIYAR", "name": "Chaliyar River Basin", "area_km2": 2923, "c_runoff": 0.81, "stream_accuracy_pct": 97.9},
+        {"id": "WS-KABINI", "name": "Kabini (East Flowing) Basin", "area_km2": 1920, "c_runoff": 0.76, "stream_accuracy_pct": 98.2}
+      ]
+    },
+    {
+      "id": "MH",
+      "name": "Maharashtra",
+      "zone": "Deccan Plateau Semi-Arid Black Soil",
+      "mean_annual_rainfall_mm": 1150,
+      "center": [19.75, 75.71],
+      "zoom": 7,
+      "major_basins": [
+        {"id": "WS-GODAVARI-MH", "name": "Upper Godavari Basin (Nashik/Nanded)", "area_km2": 152199, "c_runoff": 0.58, "stream_accuracy_pct": 97.8},
+        {"id": "WS-KRISHNA-MH", "name": "Upper Krishna Basin (Satara/Kolhapur)", "area_km2": 69400, "c_runoff": 0.62, "stream_accuracy_pct": 98.1},
+        {"id": "WS-TAPI-MH", "name": "Tapi Basin (Khandesh)", "area_km2": 51200, "c_runoff": 0.55, "stream_accuracy_pct": 97.6}
+      ]
+    },
+    {
+      "id": "RJ",
+      "name": "Rajasthan",
+      "zone": "Arid & Semi-Arid Western Plains",
+      "mean_annual_rainfall_mm": 575,
+      "center": [26.5, 74.0],
+      "zoom": 7,
+      "major_basins": [
+        {"id": "WS-LUNI-RJ", "name": "Luni River Basin (Marwar)", "area_km2": 37363, "c_runoff": 0.38, "stream_accuracy_pct": 97.4},
+        {"id": "WS-BANAS-RJ", "name": "Banas River Basin (Mewar)", "area_km2": 45833, "c_runoff": 0.44, "stream_accuracy_pct": 98.0},
+        {"id": "WS-CHAMBAL-RJ", "name": "Chambal Basin (Hadoti)", "area_km2": 79400, "c_runoff": 0.52, "stream_accuracy_pct": 98.2}
+      ]
+    },
+    {
+      "id": "KA",
+      "name": "Karnataka",
+      "zone": "South Deccan Semi-Arid & Malnad",
+      "mean_annual_rainfall_mm": 1248,
+      "center": [15.3, 75.7],
+      "zoom": 7,
+      "major_basins": [
+        {"id": "WS-CAUVERY-KA", "name": "Upper Cauvery Basin (Kodagu/Mysuru)", "area_km2": 34273, "c_runoff": 0.72, "stream_accuracy_pct": 98.5},
+        {"id": "WS-TUNGA-KA", "name": "Tungabhadra Basin (Bellary/Raichur)", "area_km2": 71417, "c_runoff": 0.54, "stream_accuracy_pct": 97.9},
+        {"id": "WS-MALAPRABHA-KA", "name": "Malaprabha Basin (Belagavi)", "area_km2": 11549, "c_runoff": 0.59, "stream_accuracy_pct": 97.7}
+      ]
+    },
+    {
+      "id": "MP",
+      "name": "Madhya Pradesh",
+      "zone": "Central Highlands & Satpura-Vindhya",
+      "mean_annual_rainfall_mm": 1160,
+      "center": [23.5, 78.5],
+      "zoom": 7,
+      "major_basins": [
+        {"id": "WS-NARMADA-MP", "name": "Narmada Valley Basin (Jabalpur/Hoshangabad)", "area_km2": 85859, "c_runoff": 0.64, "stream_accuracy_pct": 98.7},
+        {"id": "WS-BETWA-MP", "name": "Betwa Basin (Bundelkhand)", "area_km2": 43895, "c_runoff": 0.49, "stream_accuracy_pct": 97.8},
+        {"id": "WS-SON-MP", "name": "Son River Basin (Baghelkhand)", "area_km2": 71259, "c_runoff": 0.56, "stream_accuracy_pct": 98.1}
+      ]
+    },
+    {
+      "id": "AP",
+      "name": "Andhra Pradesh",
+      "zone": "Eastern Coastal Plains & Rayalaseema",
+      "mean_annual_rainfall_mm": 940,
+      "center": [15.9, 79.7],
+      "zoom": 7,
+      "major_basins": [
+        {"id": "WS-PENNAR-AP", "name": "Pennar River Basin (Rayalaseema)", "area_km2": 55213, "c_runoff": 0.42, "stream_accuracy_pct": 97.5},
+        {"id": "WS-KRISHNA-AP", "name": "Lower Krishna Delta Basin", "area_km2": 76252, "c_runoff": 0.61, "stream_accuracy_pct": 98.3},
+        {"id": "WS-GODAVARI-AP", "name": "Lower Godavari Delta (Rajahmundry)", "area_km2": 73200, "c_runoff": 0.65, "stream_accuracy_pct": 98.6}
+      ]
+    }
+  ],
+  "soil_types_india": {
+    "laterite": {"erodibility_k": 0.28, "field_capacity_pct": 24, "infiltration_rate_mmh": 22.5, "zone": "Western Ghats & Coastal Belts"},
+    "black_cotton": {"erodibility_k": 0.38, "field_capacity_pct": 42, "infiltration_rate_mmh": 8.5, "zone": "Deccan Traps & Central India"},
+    "red_sandy_loam": {"erodibility_k": 0.32, "field_capacity_pct": 19, "infiltration_rate_mmh": 35.0, "zone": "Southern & Eastern Peninsula"},
+    "alluvial": {"erodibility_k": 0.25, "field_capacity_pct": 32, "infiltration_rate_mmh": 18.0, "zone": "Indo-Gangetic & Coastal Deltas"},
+    "desert_arid_sand": {"erodibility_k": 0.42, "field_capacity_pct": 11, "infiltration_rate_mmh": 55.0, "zone": "Thar Desert & Aravalli Flanks"}
+  }
+}

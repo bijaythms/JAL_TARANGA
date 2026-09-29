@@ -1,0 +1,322 @@
+[
+  {
+    "name": "Thiruvananthapuram",
+    "malayalam": "",
+    "center": [
+      8.5241,
+      76.9366
+    ],
+    "vulnerability": 68,
+    "drainageDensity": 2.05,
+    "slopeDeg": 10.1,
+    "floodRisk": "Moderate",
+    "landslideRisk": "Moderate",
+    "floodVillages": 26,
+    "landslideVillages": 8,
+    "totalVillages": 124,
+    "priority": "Medium Priority (Tier-3)",
+    "source": "KSDMA Disaster Management Plan",
+    "rivers": [
+      "Karamana",
+      "Neyyar",
+      "Vamanapuram"
+    ]
+  },
+  {
+    "name": "Kollam",
+    "malayalam": "",
+    "center": [
+      8.8932,
+      76.6141
+    ],
+    "vulnerability": 63,
+    "drainageDensity": 1.95,
+    "slopeDeg": 7.3,
+    "floodRisk": "Moderate",
+    "landslideRisk": "Moderate",
+    "floodVillages": 25,
+    "landslideVillages": 6,
+    "totalVillages": 104,
+    "priority": "Standard Priority (Tier-4)",
+    "source": "KSDMA Vulnerability Atlas",
+    "rivers": [
+      "Kallada",
+      "Ithikkara"
+    ]
+  },
+  {
+    "name": "Pathanamthitta",
+    "malayalam": "",
+    "center": [
+      9.2648,
+      76.787
+    ],
+    "vulnerability": 85,
+    "drainageDensity": 2.65,
+    "slopeDeg": 18.4,
+    "floodRisk": "High",
+    "landslideRisk": "High",
+    "floodVillages": 42,
+    "landslideVillages": 21,
+    "totalVillages": 70,
+    "priority": "High Priority (Tier-2)",
+    "source": "KSDMA Orange Book",
+    "rivers": [
+      "Pamba",
+      "Achankovil",
+      "Kakkad"
+    ]
+  },
+  {
+    "name": "Alappuzha",
+    "malayalam": "",
+    "center": [
+      9.4981,
+      76.3388
+    ],
+    "vulnerability": 93,
+    "drainageDensity": 3.4,
+    "slopeDeg": 0.4,
+    "floodRisk": "Very High",
+    "landslideRisk": "Low",
+    "floodVillages": 72,
+    "landslideVillages": 0,
+    "totalVillages": 93,
+    "priority": "Critical Priority (Tier-1)",
+    "source": "UNEP-KSDMA Flood Return Assessment",
+    "rivers": [
+      "Pamba",
+      "Achankovil",
+      "Manimala"
+    ]
+  },
+  {
+    "name": "Kottayam",
+    "malayalam": "",
+    "center": [
+      9.5916,
+      76.5222
+    ],
+    "vulnerability": 82,
+    "drainageDensity": 2.45,
+    "slopeDeg": 5.2,
+    "floodRisk": "High",
+    "landslideRisk": "Moderate",
+    "floodVillages": 51,
+    "landslideVillages": 11,
+    "totalVillages": 95,
+    "priority": "High Priority (Tier-2)",
+    "source": "KSDMA Hazard Assessment",
+    "rivers": [
+      "Meenachil",
+      "Manimala"
+    ]
+  },
+  {
+    "name": "Idukki",
+    "malayalam": "",
+    "center": [
+      9.85,
+      76.9667
+    ],
+    "vulnerability": 95,
+    "drainageDensity": 2.92,
+    "slopeDeg": 34.5,
+    "floodRisk": "High",
+    "landslideRisk": "Very High",
+    "floodVillages": 24,
+    "landslideVillages": 48,
+    "totalVillages": 65,
+    "priority": "Critical Priority (Tier-1)",
+    "source": "KSDMA Hazard Atlas",
+    "rivers": [
+      "Periyar",
+      "Thodupuzhayar",
+      "Muthirapuzha"
+    ]
+  },
+  {
+    "name": "Ernakulam",
+    "malayalam": "",
+    "center": [
+      9.9816,
+      76.2999
+    ],
+    "vulnerability": 88,
+    "drainageDensity": 2.7,
+    "slopeDeg": 2.8,
+    "floodRisk": "Very High",
+    "landslideRisk": "Low",
+    "floodVillages": 64,
+    "landslideVillages": 3,
+    "totalVillages": 127,
+    "priority": "High Priority (Tier-2)",
+    "source": "KSDMA Baseline",
+    "rivers": [
+      "Periyar",
+      "Muvattupuzha",
+      "Chalakudy outfall"
+    ]
+  },
+  {
+    "name": "Thrissur",
+    "malayalam": "",
+    "center": [
+      10.5276,
+      76.2144
+    ],
+    "vulnerability": 79,
+    "drainageDensity": 2.3,
+    "slopeDeg": 6.8,
+    "floodRisk": "High",
+    "landslideRisk": "Moderate",
+    "floodVillages": 48,
+    "landslideVillages": 9,
+    "totalVillages": 255,
+    "priority": "Medium Priority (Tier-3)",
+    "source": "KSDMA Flood Maps",
+    "rivers": [
+      "Chalakudy",
+      "Karuvannur",
+      "Keecheri"
+    ]
+  },
+  {
+    "name": "Palakkad",
+    "malayalam": "",
+    "center": [
+      10.7867,
+      76.6548
+    ],
+    "vulnerability": 64,
+    "drainageDensity": 1.85,
+    "slopeDeg": 8.5,
+    "floodRisk": "Moderate",
+    "landslideRisk": "Moderate",
+    "floodVillages": 29,
+    "landslideVillages": 12,
+    "totalVillages": 157,
+    "priority": "Standard Priority (Tier-4)",
+    "source": "KSDMA District Profile",
+    "rivers": [
+      "Bharathapuzha",
+      "Kalpathipuzha",
+      "Gayathripuzha"
+    ]
+  },
+  {
+    "name": "Malappuram",
+    "malayalam": "",
+    "center": [
+      11.051,
+      76.0711
+    ],
+    "vulnerability": 75,
+    "drainageDensity": 2.2,
+    "slopeDeg": 13.5,
+    "floodRisk": "High",
+    "landslideRisk": "High",
+    "floodVillages": 38,
+    "landslideVillages": 17,
+    "totalVillages": 138,
+    "priority": "Medium Priority (Tier-3)",
+    "source": "GSI Landslide Hazard Mapping",
+    "rivers": [
+      "Bharathapuzha",
+      "Chaliyar",
+      "Kadalundi"
+    ]
+  },
+  {
+    "name": "Kozhikode",
+    "malayalam": "",
+    "center": [
+      11.2588,
+      75.7804
+    ],
+    "vulnerability": 72,
+    "drainageDensity": 2.15,
+    "slopeDeg": 11.2,
+    "floodRisk": "High",
+    "landslideRisk": "High",
+    "floodVillages": 34,
+    "landslideVillages": 14,
+    "totalVillages": 118,
+    "priority": "Medium Priority (Tier-3)",
+    "source": "GSI & KSDMA Database",
+    "rivers": [
+      "Chaliyar",
+      "Kallayi",
+      "Korapuzha"
+    ]
+  },
+  {
+    "name": "Wayanad",
+    "malayalam": "",
+    "center": [
+      11.6854,
+      76.132
+    ],
+    "vulnerability": 96,
+    "drainageDensity": 2.85,
+    "slopeDeg": 31.2,
+    "floodRisk": "High",
+    "landslideRisk": "Very High",
+    "floodVillages": 18,
+    "landslideVillages": 32,
+    "totalVillages": 49,
+    "priority": "Critical Priority (Tier-1)",
+    "source": "KSDMA Orange Book / GSI Zonation",
+    "rivers": [
+      "Kabini",
+      "Chaliyar headwaters",
+      "Mananthavady"
+    ]
+  },
+  {
+    "name": "Kannur",
+    "malayalam": "",
+    "center": [
+      11.8745,
+      75.3704
+    ],
+    "vulnerability": 58,
+    "drainageDensity": 1.9,
+    "slopeDeg": 8.0,
+    "floodRisk": "Moderate",
+    "landslideRisk": "Moderate",
+    "floodVillages": 21,
+    "landslideVillages": 7,
+    "totalVillages": 132,
+    "priority": "Standard Priority (Tier-4)",
+    "source": "KSDMA District Hazard Zonation",
+    "rivers": [
+      "Valapattanam",
+      "Anjarakandi",
+      "Kuppam"
+    ]
+  },
+  {
+    "name": "Kasaragod",
+    "malayalam": "",
+    "center": [
+      12.5102,
+      74.9852
+    ],
+    "vulnerability": 52,
+    "drainageDensity": 1.75,
+    "slopeDeg": 5.4,
+    "floodRisk": "Moderate",
+    "landslideRisk": "Low",
+    "floodVillages": 19,
+    "landslideVillages": 2,
+    "totalVillages": 128,
+    "priority": "Standard Priority (Tier-4)",
+    "source": "KSDMA Profile",
+    "rivers": [
+      "Chandragiri",
+      "Karyangod",
+      "Shiriya"
+    ]
+  }
+]

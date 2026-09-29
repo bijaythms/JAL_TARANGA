@@ -1,0 +1,2198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jal Taranga — Inundation Simulator</title>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- FontAwesome & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    (function() {
+      try {
+        var t = localStorage.getItem('vellam-theme');
+        if (!t && window.parent && window.parent.document && window.parent.document.body.classList.contains('light-theme')) {
+          t = 'light';
+        }
+        if (t === 'light') {
+          document.documentElement.classList.add('light-theme');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <style>
+    :root {
+      --bg-dark: #000000;
+      --panel-bg: #121214;
+      --card-bg: #18181b;
+      --card-hover: #222226;
+      --panel-border: #27272a;
+      --accent-blue: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --accent-emerald: #10b981;
+      --text-main: #f4f4f6;
+      --text-muted: #8e8e98;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+    }
+
+    body.light-theme,
+    html.light-theme,
+    :root.light-theme {
+      --bg-dark: #f8fafc;
+      --panel-bg: #ffffff;
+      --card-bg: #f8fafc;
+      --card-hover: #f1f5f9;
+      --panel-border: #e2e8f0;
+      --accent-blue: #0284c7;
+      --accent-glow: rgba(2, 132, 199, 0.18);
+      --accent-emerald: #059669;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --success: #059669;
+    }
+
+    /* Light Theme Element Overrides */
+    body.light-theme,
+    html.light-theme body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+    }
+
+    body.light-theme .sidebar-left::-webkit-scrollbar-thumb,
+    body.light-theme .sidebar-right::-webkit-scrollbar-thumb,
+    body.light-theme .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+    }
+
+    body.light-theme input,
+    body.light-theme select {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+    }
+
+    body.light-theme select option {
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    body.light-theme input:focus,
+    body.light-theme select:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    body.light-theme input[type="range"] {
+      background: #e2e8f0;
+      accent-color: var(--accent-blue);
+    }
+
+    body.light-theme .btn-secondary {
+      background: #f1f5f9;
+      color: #1e293b;
+      border: 1px solid #cbd5e1;
+    }
+
+    body.light-theme .btn-secondary:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+      color: #0284c7;
+    }
+
+    body.light-theme .weather-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    body.light-theme .weather-card strong {
+      color: #0f172a !important;
+    }
+
+    body.light-theme .basemap-btn {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #475569;
+    }
+
+    body.light-theme .basemap-btn:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+
+    body.light-theme .basemap-btn.active {
+      background: #e0f2fe;
+      border-color: #0284c7;
+      color: #0284c7;
+      box-shadow: 0 0 10px rgba(2, 132, 199, 0.2);
+    }
+
+    body.light-theme .overlay-toggles-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    body.light-theme .overlay-toggle-item {
+      color: #0f172a;
+    }
+
+    body.light-theme .stat-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    body.light-theme .stat-card .value {
+      color: #0284c7;
+    }
+
+    body.light-theme #activeFlowArea {
+      color: #0284c7 !important;
+    }
+
+    body.light-theme .alert-red {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    body.light-theme .alert-red #alertTitle {
+      color: #991b1b;
+    }
+
+    body.light-theme .alert-red #alertSub {
+      color: #b91c1c;
+    }
+
+    body.light-theme .alert-orange {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+    }
+
+    body.light-theme .alert-green {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    body.light-theme #areaDry,
+    body.light-theme #areaLow,
+    body.light-theme #areaMed,
+    body.light-theme #areaHigh,
+    body.light-theme #areaExtr {
+      color: #0f172a !important;
+    }
+
+    body.light-theme .risk-bar {
+      background: #e2e8f0;
+    }
+
+    body.light-theme #map-wrapper,
+    body.light-theme #map {
+      background: #f1f5f9;
+    }
+
+    body.light-theme .map-search-box {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    body.light-theme .map-search-box input {
+      color: #0f172a;
+    }
+
+    body.light-theme .map-search-box input::placeholder {
+      color: #94a3b8;
+    }
+
+    body.light-theme .map-search-box i {
+      color: #0284c7;
+    }
+
+    body.light-theme .map-search-clear {
+      color: #94a3b8;
+    }
+
+    body.light-theme .map-search-clear:hover {
+      color: #0f172a;
+    }
+
+    body.light-theme .map-search-results {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    body.light-theme .search-result-item {
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    body.light-theme .search-result-item:hover {
+      background: #f8fafc;
+    }
+
+    body.light-theme .search-result-item .title {
+      color: #0f172a;
+    }
+
+    body.light-theme .search-result-item .subtitle {
+      color: #64748b;
+    }
+
+    body.light-theme .map-tool-btn {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-theme .map-tool-btn:hover {
+      background: #f8fafc;
+      color: #0284c7;
+      border-color: #0284c7;
+    }
+
+    body.light-theme .map-tool-btn.active {
+      background: #e0f2fe;
+      color: #0284c7;
+      border-color: #0284c7;
+    }
+
+    body.light-theme .map-top-btn {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    body.light-theme .map-top-btn:hover {
+      background: #f8fafc;
+      color: #0284c7;
+      border-color: #0284c7;
+    }
+
+    body.light-theme .map-top-btn.active {
+      background: #e0f2fe;
+      color: #0284c7;
+      border-color: #0284c7;
+      box-shadow: 0 0 12px rgba(2, 132, 199, 0.2);
+    }
+
+    body.light-theme .panel-hide-btn {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+    }
+
+    body.light-theme .panel-hide-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+      border-color: #94a3b8;
+    }
+
+    body.light-theme .map-side-layers-panel {
+      background: rgba(255, 255, 255, 0.97);
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    body.light-theme .panel-header-row {
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    body.light-theme .panel-close-btn {
+      color: #64748b;
+    }
+
+    body.light-theme .panel-close-btn:hover {
+      color: #0f172a;
+    }
+
+    body.light-theme .map-legend {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      color: #0f172a;
+    }
+
+    body.light-theme .map-legend strong {
+      color: #0f172a !important;
+    }
+
+    body.light-theme .legend-item span {
+      color: #334155;
+    }
+
+    body.light-theme .download-grid a {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #1e293b;
+    }
+
+    body.light-theme .download-grid a:hover {
+      background: #e2e8f0;
+      color: #0284c7;
+      border-color: #0284c7;
+    }
+
+    body.light-theme .download-grid a#dlShp {
+      background: #0284c7 !important;
+      color: #ffffff !important;
+      border-color: #0284c7 !important;
+    }
+
+    body.light-theme .progress-overlay {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #0284c7;
+      color: #0f172a;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Completely eliminate any horizontal scrollbar / sliding bar */
+    *::-webkit-scrollbar:horizontal {
+      display: none !important;
+      height: 0 !important;
+      width: 0 !important;
+    }
+
+    html, body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      height: 100%;
+      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      overflow: hidden !important;
+      overflow-x: hidden !important;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Main Container Grid - Fits 100% of container without sliding or horizontal scroll */
+    .app-container {
+      display: flex;
+      flex: 1;
+      height: 100%;
+      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      position: relative;
+      overflow: hidden !important;
+      overflow-x: hidden !important;
+    }
+
+    /* Left Control Sidebar */
+    .sidebar-left {
+      width: 350px;
+      min-width: 320px;
+      max-width: 350px;
+      background: var(--panel-bg);
+      border-right: 1px solid var(--panel-border);
+      overflow-y: auto;
+      overflow-x: hidden !important;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 500;
+      box-sizing: border-box;
+    }
+
+    .sidebar-left::-webkit-scrollbar,
+    .sidebar-right::-webkit-scrollbar,
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .sidebar-left::-webkit-scrollbar-thumb,
+    .sidebar-right::-webkit-scrollbar-thumb,
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 4px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-blue);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    label span.val-badge {
+      color: var(--accent-blue);
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    input, select {
+      background: var(--card-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      color: var(--text-main);
+      padding: 8px 10px;
+      font-size: 12px;
+      outline: none;
+      transition: all 0.2s;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    select {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    input[type="range"] {
+      padding: 0;
+      height: 6px;
+      background: #27272a;
+      border-radius: 3px;
+      cursor: pointer;
+      accent-color: var(--accent-blue);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 8px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+      color: white;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.45);
+    }
+
+    .btn-secondary {
+      background: #18181b;
+      color: var(--text-main);
+      border: 1px solid var(--panel-border);
+      padding: 7px 11px;
+      font-size: 11px;
+      box-shadow: none;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #27272a;
+      border-color: #3f3f46;
+      color: #38bdf8;
+    }
+
+    /* Live Weather Box */
+    .weather-card {
+      background: var(--card-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 11.5px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .weather-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Basemap Switcher Buttons */
+    .basemap-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 6px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .basemap-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      padding: 7px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .basemap-btn:hover {
+      background: #27272a;
+      color: var(--text-main);
+      border-color: #3f3f46;
+    }
+
+    .basemap-btn.active {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+    }
+
+    /* Overlay Toggles Card */
+    .overlay-toggles-card {
+      background: var(--card-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .overlay-toggle-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .overlay-toggle-item input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+      accent-color: var(--accent-blue);
+    }
+
+    /* Central Map View */
+    #map-wrapper {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      background: #000000;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      z-index: 10;
+    }
+
+    /* Modern Place Search Bar */
+    .map-search-container {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 1000;
+      width: 320px;
+      max-width: calc(100% - 28px);
+    }
+
+    .map-search-box {
+      display: flex;
+      align-items: center;
+      background: rgba(24, 24, 27, 0.95);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    }
+
+    .map-search-box:focus-within {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 2px var(--accent-glow), 0 8px 24px rgba(0, 0, 0, 0.8);
+    }
+
+    .map-search-box i {
+      color: var(--accent-blue);
+      font-size: 13px;
+    }
+
+    .map-search-box input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #f4f4f6;
+      font-size: 12px;
+      width: 100%;
+      padding: 0 8px;
+    }
+
+    .map-search-box input::placeholder {
+      color: #71717a;
+    }
+
+    .map-search-clear {
+      color: #71717a;
+      cursor: pointer;
+      font-size: 12px;
+      display: none;
+    }
+
+    .map-search-clear:hover {
+      color: #ffffff;
+    }
+
+    .map-search-results {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 6px;
+      background: #18181b;
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      max-height: 260px;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      display: none;
+      z-index: 1001;
+    }
+
+    .search-result-item {
+      padding: 8px 12px;
+      border-bottom: 1px solid #27272a;
+      cursor: pointer;
+      font-size: 11.5px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: background 0.15s;
+    }
+
+    .search-result-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-result-item:hover {
+      background: #27272a;
+    }
+
+    .search-result-item .title {
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .search-result-item .subtitle {
+      font-size: 10px;
+      color: #a1a1aa;
+    }
+
+    /* Sleek Map Zoom & Tool Controls */
+    .map-zoom-tools {
+      position: absolute;
+      top: 64px;
+      left: 14px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .map-tool-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(24, 24, 27, 0.92);
+      border: 1px solid var(--panel-border);
+      color: #f4f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      transition: all 0.2s;
+    }
+
+    .map-tool-btn:hover {
+      background: #27272a;
+      color: var(--accent-blue);
+      border-color: var(--accent-blue);
+    }
+
+    .map-tool-btn.active {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-blue);
+      border-color: var(--accent-blue);
+    }
+
+    /* Top-Right Map Controls Toolbar */
+    .map-top-right-tools {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .map-top-btn {
+      background: rgba(24, 24, 27, 0.94);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      color: #f4f4f6;
+      padding: 7px 12px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      font-size: 11.5px;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .map-top-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: #27272a;
+    }
+
+    .map-top-btn.active {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Collapsible Panel States */
+    .sidebar-left.panel-collapsed,
+    .sidebar-right.panel-collapsed {
+      display: none !important;
+      width: 0 !important;
+      min-width: 0 !important;
+      max-width: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      overflow: hidden !important;
+    }
+
+    /* Results Panel Hide Button */
+    .panel-hide-btn {
+      background: #18181b;
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .panel-hide-btn:hover {
+      background: #27272a;
+      color: #ffffff;
+      border-color: #3f3f46;
+    }
+
+    /* Completely Remove Leaflet Attribution, Flags and Outside Watermark */
+    .leaflet-control-attribution,
+    .leaflet-control-attribution * {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+    }
+
+    /* Floating Dark Layers & Opacity Side Panel on Map */
+    .map-side-layers-panel {
+      position: absolute;
+      top: 54px;
+      right: 14px;
+      width: 275px;
+      background: rgba(18, 18, 20, 0.96);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 14px;
+      z-index: 1100;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.75);
+      backdrop-filter: blur(10px);
+    }
+
+    .panel-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 6px;
+    }
+
+    .panel-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 2px 4px;
+    }
+
+    .panel-close-btn:hover {
+      color: #ffffff;
+    }
+
+    /* Right Analytics Panel */
+    .sidebar-right {
+      width: 340px;
+      min-width: 310px;
+      max-width: 340px;
+      background: var(--panel-bg);
+      border-left: 1px solid var(--panel-border);
+      overflow-y: auto;
+      overflow-x: hidden !important;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 500;
+      box-sizing: border-box;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .stat-card .label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-card .value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent-blue);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-card .desc {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* Alert Banner */
+    .alert-banner {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-red {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+
+    .alert-orange {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid #f59e0b;
+      color: #fcd34d;
+    }
+
+    .alert-green {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid #10b981;
+      color: #6ee7b7;
+    }
+
+    /* Risk Distribution Bars */
+    .risk-bar {
+      display: flex;
+      height: 9px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 7px;
+      background: #27272a;
+    }
+
+    .risk-bar span {
+      height: 100%;
+    }
+
+    /* Progress Overlay */
+    .progress-overlay {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(18, 18, 20, 0.95);
+      border: 1px solid var(--accent-blue);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.85);
+      padding: 12px 20px;
+      border-radius: 30px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      z-index: 2000;
+      font-size: 12.5px;
+      font-weight: 600;
+      backdrop-filter: blur(8px);
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(56, 189, 248, 0.2);
+      border-top-color: var(--accent-blue);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Floating Map Legend */
+    .map-legend {
+      position: absolute;
+      bottom: 20px;
+      left: 14px;
+      background: rgba(18, 18, 20, 0.92);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 10.5px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    /* Downloads List */
+    .download-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 7px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .download-grid a {
+      background: var(--card-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      color: var(--text-main);
+      padding: 7px 9px;
+      font-size: 10.5px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .download-grid a:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: #222226;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Left Controls Panel -->
+    <div class="sidebar-left">
+
+      <div>
+        <div class="section-title"><i class="fa-solid fa-bookmark"></i> Scenario Presets</div>
+        <select id="presetSelect" onchange="applyPreset()">
+          <option value="custom">-- Select Scenario Preset --</option>
+          <option value="kerala_2018" selected>National Benchmark Deluge (150mm / 12h)</option>
+          <option value="kerala_idukki">Idukki Reservoir Catchment Spill (210mm / 16h)</option>
+          <option value="kerala_kuttanad">Kuttanad Backwater Overflow (140mm / 24h)</option>
+          <option value="chennai_2015">Chennai 2015 Cloudburst (280mm / 12h)</option>
+          <option value="mumbai_2005">Mumbai 2005 Mega Deluge (350mm / 18h)</option>
+          <option value="assam_2020">Assam Brahmaputra Inundation (180mm / 24h)</option>
+          <option value="delhi_2023">Delhi Yamuna Flash Flood (120mm / 8h)</option>
+        </select>
+      </div>
+
+      <!-- Basemap Selection (Moved to side as separate option) -->
+      <div>
+        <div class="section-title"><i class="fa-solid fa-layer-group"></i> Basemap Layer</div>
+        <div class="basemap-grid">
+          <button type="button" class="basemap-btn active" id="bbtn-hybrid" onclick="selectBasemap('googleHybrid')">
+            <i class="fa-solid fa-satellite"></i> Hybrid
+          </button>
+          <button type="button" class="basemap-btn" id="bbtn-esri" onclick="selectBasemap('esriWorld')">
+            <i class="fa-solid fa-earth-americas"></i> ESRI Imagery
+          </button>
+          <button type="button" class="basemap-btn" id="bbtn-sat" onclick="selectBasemap('googleSat')">
+            <i class="fa-solid fa-globe"></i> Satellite
+          </button>
+          <button type="button" class="basemap-btn" id="bbtn-osm" onclick="selectBasemap('osm')">
+            <i class="fa-solid fa-map"></i> OpenStreet
+          </button>
+        </div>
+      </div>
+
+      <!-- Inundation Overlays & Opacity (Moved from top of map to side option) -->
+      <div>
+        <div class="section-title"><i class="fa-solid fa-water"></i> Overlays &amp; Opacity</div>
+        <div class="overlay-toggles-card">
+          <label class="overlay-toggle-item">
+            <span><i class="fa-solid fa-water" style="color: #38bdf8;"></i> Flood Depth Map</span>
+            <input type="checkbox" id="chkDepth" checked onchange="toggleOverlay('depth', this.checked)">
+          </label>
+          <label class="overlay-toggle-item">
+            <span><i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i> NDMA Risk Class</span>
+            <input type="checkbox" id="chkRisk" onchange="toggleOverlay('risk', this.checked)">
+          </label>
+          <label class="overlay-toggle-item">
+            <span><i class="fa-solid fa-wind" style="color: #c084fc;"></i> Flow Velocity Map</span>
+            <input type="checkbox" id="chkVelocity" onchange="toggleOverlay('velocity', this.checked)">
+          </label>
+        </div>
+
+        <div class="form-group" style="margin-top: 10px;">
+          <label>
+            <span>Overlay Opacity</span>
+            <span class="val-badge" id="opacityVal">85%</span>
+          </label>
+          <input type="range" id="opacitySlider" min="0" max="1" step="0.05" value="0.85" oninput="changeOpacity(this.value)">
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title"><i class="fa-solid fa-cloud-showers-heavy"></i> Meteorological Forcing</div>
+
+        <div class="form-group">
+          <label>
+            Storm Rainfall (P)
+            <span class="val-badge" id="rainVal">150 mm</span>
+          </label>
+          <input type="range" id="rainInput" min="10" max="500" step="5" value="150" oninput="updateRainDisplay(this.value)">
+          <span style="font-size: 10.5px; color: #f59e0b; margin-top: 2px;" id="imdCategory"><i class="fa-solid fa-triangle-exclamation"></i> Very Heavy Rain (IMD Orange)</span>
+        </div>
+
+        <div class="form-group">
+          <label>
+            Storm Duration
+            <span class="val-badge" id="durVal">12.0 hr</span>
+          </label>
+          <input type="range" id="durInput" min="1" max="72" step="1" value="12" oninput="updateDurDisplay(this.value)">
+        </div>
+
+        <div class="form-group">
+          <label>Antecedent Moisture Condition (AMC)</label>
+          <select id="amcSelect">
+            <option value="I">AMC-I (Dry Soil / Pre-monsoon)</option>
+            <option value="II">AMC-II (Average / Normal Moisture)</option>
+            <option value="III" selected>AMC-III (Saturated / Peak Monsoon)</option>
+          </select>
+        </div>
+
+        <!-- Live Forecast Card -->
+        <div class="weather-card">
+          <div class="weather-status">
+            <strong style="color: #ffffff;"><i class="fa-solid fa-satellite-dish" style="color: var(--accent-blue);"></i> Live Weather Forecast</strong>
+            <button class="btn btn-secondary" onclick="fetchLiveWeather()"><i class="fa-solid fa-arrows-rotate"></i> Fetch</button>
+          </div>
+          <div id="weatherInfo" style="color: var(--text-muted); font-size: 11px;">
+            Click fetch to retrieve ECMWF/GFS live precipitation for domain center.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title"><i class="fa-solid fa-map-location-dot"></i> Simulation Domain (BBox)</div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Min Lon</label>
+            <input type="number" id="minLon" step="0.01" value="76.50" onchange="updateDomainRectangle()">
+          </div>
+          <div class="form-group">
+            <label>Min Lat</label>
+            <input type="number" id="minLat" step="0.01" value="9.90" onchange="updateDomainRectangle()">
+          </div>
+          <div class="form-group">
+            <label>Max Lon</label>
+            <input type="number" id="maxLon" step="0.01" value="76.90" onchange="updateDomainRectangle()">
+          </div>
+          <div class="form-group">
+            <label>Max Lat</label>
+            <input type="number" id="maxLat" step="0.01" value="10.30" onchange="updateDomainRectangle()">
+          </div>
+        </div>
+        <button class="btn btn-secondary" style="width: 100%;" onclick="zoomToBBox()"><i class="fa-solid fa-crosshairs"></i> Center Map on Domain</button>
+      </div>
+
+      <div>
+        <div class="section-title"><i class="fa-solid fa-layer-group"></i> Terrain Source</div>
+        <select id="demSelect">
+          <option value="cop30" selected>🛰️ Copernicus GLO-30 (30m Real DEM / Cached)</option>
+          <option value="synthetic">🧪 Synthetic Benchmark Terrain (Offline / Demo Mode)</option>
+        </select>
+        <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 4px;">
+          Copernicus DEM tiles for monitored basins are cached locally for zero-latency execution.
+        </div>
+      </div>
+
+      <button class="btn" id="runBtn" onclick="runSimulation()">
+        <i class="fa-solid fa-play"></i> Run Inundation Simulation
+      </button>
+
+    </div>
+
+    <!-- Central Leaflet Map Wrapper -->
+    <div id="map-wrapper">
+      
+      <!-- Interactive Place Search Bar on Map -->
+      <div class="map-search-container">
+        <div class="map-search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="mapSearchInput" placeholder="Search place (e.g. Aluva, Munnar, Idukki, Wayanad)..." autocomplete="off" oninput="handleSearchInput(this.value)" onkeydown="if(event.key==='Enter') searchSubmitFirst()">
+          <span class="map-search-clear" id="mapSearchClear" onclick="clearPlaceSearch()"><i class="fa-solid fa-xmark"></i></span>
+        </div>
+        <div class="map-search-results custom-scroll" id="mapSearchResults"></div>
+      </div>
+
+      <!-- Sleek Map Zoom & Tool Controls -->
+      <div class="map-zoom-tools">
+        <button class="map-tool-btn" onclick="mapZoomIn()" title="Zoom In (+)">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+        <button class="map-tool-btn" onclick="mapZoomOut()" title="Zoom Out (-)">
+          <i class="fa-solid fa-minus"></i>
+        </button>
+        <button class="map-tool-btn" id="btnToolFullView" onclick="toggleFullViewMap()" title="Toggle Full View Map (Hide Sidebars)">
+          <i class="fa-solid fa-maximize"></i>
+        </button>
+        <button class="map-tool-btn" onclick="zoomToBBox()" title="Fit Simulation Domain (BBox)">
+          <i class="fa-solid fa-expand"></i>
+        </button>
+        <button class="map-tool-btn" onclick="locateUserPosition()" title="Locate My Position">
+          <i class="fa-solid fa-location-crosshairs"></i>
+        </button>
+      </div>
+
+      <!-- Top Right Map Tools Toolbar (Full View, Show Results, Layers) -->
+      <div class="map-top-right-tools">
+        <button class="map-top-btn" id="btnFullViewMap" onclick="toggleFullViewMap()" title="Toggle Full View Map Mode">
+          <i class="fa-solid fa-maximize" id="fullViewIcon" style="color: var(--accent-blue);"></i>
+          <span id="fullViewText">Full View Map</span>
+        </button>
+        <button class="map-top-btn" id="btnShowResults" style="display: none; border-color: rgba(56, 189, 248, 0.5); color: var(--accent-blue);" onclick="toggleResultsPanel(true)" title="Show Simulation Results Panel">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Show Results</span>
+        </button>
+        <button class="map-top-btn" id="btnToggleSideLayers" onclick="toggleSideLayersPanel()" title="Open Layers & Opacity Control">
+          <i class="fa-solid fa-layer-group" style="color: var(--accent-blue);"></i>
+          <span>Layers &amp; Opacity</span>
+        </button>
+      </div>
+
+      <!-- Side Layers & Opacity Floating Drawer on Map -->
+      <div class="map-side-layers-panel" id="sideLayersPanel">
+        <div class="panel-header-row">
+          <span style="font-size: 11.5px; font-weight: 700; color: #38bdf8; text-transform: uppercase;">
+            <i class="fa-solid fa-layer-group"></i> Map Layers &amp; Opacity
+          </span>
+          <button class="panel-close-btn" onclick="toggleSideLayersPanel()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div>
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block;">Basemap</label>
+          <div class="basemap-grid">
+            <button type="button" class="basemap-btn active" id="pbtn-hybrid" onclick="selectBasemap('googleHybrid')">Hybrid</button>
+            <button type="button" class="basemap-btn" id="pbtn-esri" onclick="selectBasemap('esriWorld')">ESRI World</button>
+            <button type="button" class="basemap-btn" id="pbtn-sat" onclick="selectBasemap('googleSat')">Google Sat</button>
+            <button type="button" class="basemap-btn" id="pbtn-osm" onclick="selectBasemap('osm')">OpenStreet</button>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block;">Simulation Overlays</label>
+          <div class="overlay-toggles-card">
+            <label class="overlay-toggle-item">
+              <span>🌊 Flood Depth</span>
+              <input type="checkbox" id="pchkDepth" checked onchange="toggleOverlay('depth', this.checked)">
+            </label>
+            <label class="overlay-toggle-item">
+              <span>⚠️ NDMA Hazard Risk</span>
+              <input type="checkbox" id="pchkRisk" onchange="toggleOverlay('risk', this.checked)">
+            </label>
+            <label class="overlay-toggle-item">
+              <span>💨 Flow Velocity</span>
+              <input type="checkbox" id="pchkVelocity" onchange="toggleOverlay('velocity', this.checked)">
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size: 11px; font-weight: 600; color: var(--text-muted); display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span>Overlay Opacity</span>
+            <span class="val-badge" id="sideOpacityVal">85%</span>
+          </label>
+          <input type="range" id="sideOpacitySlider" min="0" max="1" step="0.05" value="0.85" oninput="changeOpacity(this.value)" style="width: 100%;">
+        </div>
+      </div>
+
+      <!-- Central Map Container -->
+      <div id="map"></div>
+
+      <!-- Floating Map Legend (FastFlood Physical Depth Scale) -->
+      <div class="map-legend">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; border-bottom: 1px solid var(--panel-border); padding-bottom: 3px;">
+          <strong style="font-size: 11px; color: #f4f4f6;"><i class="fa-solid fa-water" style="color: var(--accent-blue);"></i> Flood Depth (m)</strong>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: rgba(255, 255, 255, 0.15); border: 1px dashed #71717a;"></div>
+          <span>0 m (Dry)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #a0c8ff;"></div>
+          <span>0.1 m</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #48a0f8;"></div>
+          <span>0.25 m</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #1878f0;"></div>
+          <span>0.5 m</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #0848d8;"></div>
+          <span>1 m</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #0224a0;"></div>
+          <span>2 m</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #000c60;"></div>
+          <span>5 m+</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Results Panel -->
+    <div class="sidebar-right" id="resultsPanel">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <div class="section-title" style="margin-bottom: 0;">
+          <i class="fa-solid fa-chart-line"></i> Simulation Results
+        </div>
+        <button type="button" class="panel-hide-btn" onclick="toggleResultsPanel(false)" title="Hide Simulation Results Panel">
+          <i class="fa-solid fa-chevron-right"></i> Hide
+        </button>
+      </div>
+
+      <div class="alert-banner alert-red" id="alertBanner">
+        <i class="fa-solid fa-triangle-exclamation" style="font-size: 16px;"></i>
+        <div>
+          <div id="alertTitle">SIMULATION READY</div>
+          <div style="font-size: 10px; font-weight: 400;" id="alertSub">Click 'Run Inundation Simulation' to compute.</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="stat-card">
+          <div class="label">Flooded Area</div>
+          <div class="value" id="floodedArea">-- km²</div>
+          <div class="desc" id="floodedPct">0% of domain</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Flow vs Puddles</div>
+          <div class="value" id="activeFlowArea" style="font-size: 13.5px; font-weight: 700; color: #38bdf8;">-- km² Flow</div>
+          <div class="desc" id="puddleArea">-- km² Puddles</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="stat-card">
+          <div class="label">Max Depth</div>
+          <div class="value" id="maxDepth">-- m</div>
+          <div class="desc">Water column peak</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Peak Discharge</div>
+          <div class="value" id="peakQ">-- m³/s</div>
+          <div class="desc">Attenuated peak flow</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title"><i class="fa-solid fa-shield-halved"></i> NDMA Risk Breakdown</div>
+        <div style="font-size: 11px; display: flex; justify-content: space-between;">
+          <span style="color: #71717a;">Dry: <b id="areaDry" style="color: white;">--</b></span>
+          <span style="color: #facc15;">Low: <b id="areaLow" style="color: white;">--</b></span>
+          <span style="color: #fb923c;">Med: <b id="areaMed" style="color: white;">--</b></span>
+          <span style="color: #f87171;">High: <b id="areaHigh" style="color: white;">--</b></span>
+          <span style="color: #c084fc;">Extr: <b id="areaExtr" style="color: white;">--</b></span>
+        </div>
+        <div class="risk-bar">
+          <span id="barDry" style="background: #27272a; width: 60%;"></span>
+          <span id="barLow" style="background: #ffff33; width: 5%;"></span>
+          <span id="barMed" style="background: #ff9900; width: 5%;"></span>
+          <span id="barHigh" style="background: #dc143c; width: 10%;"></span>
+          <span id="barExtr" style="background: #800080; width: 20%;"></span>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title"><i class="fa-solid fa-download"></i> Export Rasters, Shapefile &amp; Maps</div>
+        <div class="download-grid">
+          <a id="dlShp" href="#" target="_blank" style="background: #0284c7; color: white; font-weight: 700;"><i class="fa-solid fa-file-zipper"></i> Shapefile (.zip)</a>
+          <a id="dlGeojson" href="#" target="_blank"><i class="fa-solid fa-file-code"></i> GeoJSON Data</a>
+          <a id="dlDepth" href="#" target="_blank"><i class="fa-solid fa-file-arrow-down"></i> Depth GeoTIFF</a>
+          <a id="dlRisk" href="#" target="_blank"><i class="fa-solid fa-file-arrow-down"></i> Risk GeoTIFF</a>
+          <a id="dlVelocity" href="#" target="_blank"><i class="fa-solid fa-file-arrow-down"></i> Vel GeoTIFF</a>
+          <a id="dlPng" href="#" target="_blank"><i class="fa-solid fa-image"></i> Static PNG Map</a>
+          <a id="dlHtml" href="#" target="_blank"><i class="fa-solid fa-globe"></i> Interactive HTML</a>
+          <a id="dlJson" href="#" target="_blank"><i class="fa-solid fa-code"></i> Report JSON</a>
+        </div>
+      </div>
+
+      <div class="stat-card" style="font-size: 11px;">
+        <div class="label"><i class="fa-solid fa-circle-info"></i> Point Inspector</div>
+        <div id="inspectorText" style="color: var(--text-muted); margin-top: 4px; line-height: 1.4;">
+          Click any location on the map to inspect depth, flow velocity, elevation, and risk category.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Progress Indicator Overlay -->
+    <div class="progress-overlay" id="progressOverlay">
+      <div class="spinner"></div>
+      <span id="progressText">Executing 5-Step FastFlood Algorithm...</span>
+    </div>
+
+  </div>
+
+  <script>
+    // --- Initialize Leaflet Map ---
+    const map = L.map('map', {
+      center: [10.10, 76.70],
+      zoom: 11,
+      zoomControl: false, // Custom sleek zoom buttons
+      attributionControl: false, // Completely disable outside Leaflet attribution text & flag
+      preferCanvas: true
+    });
+
+    // Custom Map Zoom Handlers
+    function mapZoomIn() { map.zoomIn(); }
+    function mapZoomOut() { map.zoomOut(); }
+
+    // --- Full View Map Toggle Handler ---
+    let isFullViewMap = false;
+    function toggleFullViewMap() {
+      isFullViewMap = !isFullViewMap;
+      const leftSidebar = document.querySelector('.sidebar-left');
+      const rightSidebar = document.getElementById('resultsPanel');
+      const btnFullView = document.getElementById('btnFullViewMap');
+      const iconFullView = document.getElementById('fullViewIcon');
+      const textFullView = document.getElementById('fullViewText');
+      const toolBtn = document.getElementById('btnToolFullView');
+
+      if (isFullViewMap) {
+        // Hide both left and right sidebars to give full width map view
+        if (leftSidebar) leftSidebar.classList.add('panel-collapsed');
+        if (rightSidebar) rightSidebar.classList.add('panel-collapsed');
+
+        if (btnFullView) {
+          btnFullView.classList.add('active');
+          if (iconFullView) iconFullView.className = 'fa-solid fa-compress';
+          if (textFullView) textFullView.innerText = 'Exit Full View';
+        }
+        if (toolBtn) {
+          toolBtn.classList.add('active');
+          toolBtn.innerHTML = '<i class="fa-solid fa-compress"></i>';
+          toolBtn.title = 'Exit Full View Map (Show Sidebars)';
+        }
+      } else {
+        // Restore left sidebar
+        if (leftSidebar) leftSidebar.classList.remove('panel-collapsed');
+
+        // Restore right results sidebar only if user hasn't explicitly hidden it
+        if (!isResultsPanelHidden) {
+          if (rightSidebar) rightSidebar.classList.remove('panel-collapsed');
+        }
+
+        if (btnFullView) {
+          btnFullView.classList.remove('active');
+          if (iconFullView) iconFullView.className = 'fa-solid fa-maximize';
+          if (textFullView) textFullView.innerText = 'Full View Map';
+        }
+        if (toolBtn) {
+          toolBtn.classList.remove('active');
+          toolBtn.innerHTML = '<i class="fa-solid fa-maximize"></i>';
+          toolBtn.title = 'Toggle Full View Map (Hide Sidebars)';
+        }
+      }
+
+      // Smoothly trigger Leaflet map resize
+      setTimeout(() => {
+        map.invalidateSize(true);
+      }, 200);
+    }
+
+    // --- Simulation Results Panel Toggle (Hide / Show) ---
+    let isResultsPanelHidden = false;
+    function toggleResultsPanel(show) {
+      const panel = document.getElementById('resultsPanel');
+      const btnShow = document.getElementById('btnShowResults');
+
+      if (show === undefined) {
+        show = isResultsPanelHidden;
+      }
+
+      isResultsPanelHidden = !show;
+
+      if (show) {
+        if (panel) panel.classList.remove('panel-collapsed');
+        if (btnShow) btnShow.style.display = 'none';
+      } else {
+        if (panel) panel.classList.add('panel-collapsed');
+        if (btnShow) btnShow.style.display = 'flex';
+      }
+
+      // Smoothly trigger Leaflet map resize
+      setTimeout(() => {
+        map.invalidateSize(true);
+      }, 200);
+    }
+
+    // Escape key exits Full View Map mode
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isFullViewMap) {
+        toggleFullViewMap();
+      }
+    });
+
+    function locateUserPosition() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            map.flyTo([lat, lon], 14, { duration: 1.2 });
+            L.popup()
+              .setLatLng([lat, lon])
+              .setContent(`<div style="font-size:11px;font-weight:bold;color:#0284c7;">📍 Your Location (${lat.toFixed(4)}, ${lon.toFixed(4)})</div>`)
+              .openOn(map);
+          },
+          (err) => alert('Could not get current location: ' + err.message)
+        );
+      } else {
+        alert('Geolocation is not supported by your browser.');
+      }
+    }
+
+    // Basemap Definitions
+    const basemaps = {
+      googleHybrid: L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        attribution: '© Google Maps'
+      }),
+      esriWorld: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 18,
+        attribution: 'Tiles © Esri'
+      }),
+      googleSat: L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        attribution: '© Google Maps'
+      }),
+      osm: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      })
+    };
+
+    let currentBasemapKey = 'googleHybrid';
+    basemaps.googleHybrid.addTo(map);
+
+    function selectBasemap(key) {
+      if (!basemaps[key]) return;
+      if (basemaps[currentBasemapKey]) map.removeLayer(basemaps[currentBasemapKey]);
+      basemaps[key].addTo(map);
+      currentBasemapKey = key;
+
+      // Update active button state in both sidebar and side panel
+      ['hybrid', 'esri', 'sat', 'osm'].forEach(k => {
+        const fullKey = k === 'hybrid' ? 'googleHybrid' : (k === 'esri' ? 'esriWorld' : (k === 'sat' ? 'googleSat' : 'osm'));
+        const isActive = fullKey === key;
+        const b1 = document.getElementById(`bbtn-${k}`);
+        const b2 = document.getElementById(`pbtn-${k}`);
+        if (b1) b1.classList.toggle('active', isActive);
+        if (b2) b2.classList.toggle('active', isActive);
+      });
+    }
+
+    // Side Layers Panel Toggle
+    function toggleSideLayersPanel() {
+      const panel = document.getElementById('sideLayersPanel');
+      if (!panel) return;
+      const isOpen = panel.style.display === 'flex';
+      panel.style.display = isOpen ? 'none' : 'flex';
+    }
+
+    // Active Overlays storage
+    let activeOverlays = {
+      depth: null,
+      risk: null,
+      velocity: null
+    };
+
+    let domainRect = null;
+    let searchMarker = null;
+
+    // --- BBox Rectangle on Map ---
+    function updateDomainRectangle() {
+      const minLon = parseFloat(document.getElementById('minLon').value);
+      const minLat = parseFloat(document.getElementById('minLat').value);
+      const maxLon = parseFloat(document.getElementById('maxLon').value);
+      const maxLat = parseFloat(document.getElementById('maxLat').value);
+
+      if (domainRect) map.removeLayer(domainRect);
+
+      domainRect = L.rectangle([[minLat, minLon], [maxLat, maxLon]], {
+        color: "#38bdf8",
+        weight: 2,
+        fillColor: "#38bdf8",
+        fillOpacity: 0.05,
+        dashArray: "4, 4"
+      }).addTo(map);
+    }
+
+    function zoomToBBox() {
+      const minLon = parseFloat(document.getElementById('minLon').value);
+      const minLat = parseFloat(document.getElementById('minLat').value);
+      const maxLon = parseFloat(document.getElementById('maxLon').value);
+      const maxLat = parseFloat(document.getElementById('maxLat').value);
+      map.fitBounds([[minLat, minLon], [maxLat, maxLon]], { padding: [40, 40] });
+      updateDomainRectangle();
+    }
+
+    // --- Preloaded Basin Places for Instant Search ---
+    const KERALA_PLACES = [
+      { name: "Aluva (Periyar Flood Basin)", lat: 10.1076, lon: 76.3516, desc: "Ernakulam District • Severe 2018 Inundation Hub" },
+      { name: "Munnar (Western Ghats High Range)", lat: 10.0889, lon: 77.0595, desc: "Idukki District • Flash Flood & Landslide Zone" },
+      { name: "Idukki Dam (Periyar Reservoir Catchment)", lat: 9.8436, lon: 76.9744, desc: "Major Hydropower Reservoir & Spill Channel" },
+      { name: "Wayanad (Meppadi / Chooralmala Flood Zone)", lat: 11.5500, lon: 76.1264, desc: "Wayanad District • Torrential Runoff Region" },
+      { name: "Kuttanad (Alappuzha Delta Wetlands)", lat: 9.4981, lon: 76.3388, desc: "Sub-Sea-Level Pamba & Meenachil Drainage" },
+      { name: "Chalakudy (Chalakudy River Basin)", lat: 10.3070, lon: 76.3338, desc: "Thrissur District • High Discharge Riverine Corridor" },
+      { name: "Chengannur (Pamba River Lowlands)", lat: 9.3175, lon: 76.6111, desc: "Alappuzha District • Vulnerable Delta Reaches" },
+      { name: "Ranni (Pamba Gorge Basin)", lat: 9.3809, lon: 76.7869, desc: "Pathanamthitta District • Upper Catchment Funnel" },
+      { name: "Kochi / Ernakulam (Vembanad Estuary)", lat: 9.9312, lon: 76.2673, desc: "Coastal Tidal & Inundation Zone" },
+      { name: "Thrissur (Kole Wetlands)", lat: 10.5276, lon: 76.2144, desc: "Thrissur District • Central Floodplain" },
+      { name: "Nilambur (Chaliyar River Basin)", lat: 11.2780, lon: 76.2274, desc: "Malappuram District • High Orographic Flow" },
+      { name: "Palakkad (Bharathapuzha Basin)", lat: 10.7867, lon: 76.6548, desc: "Palakkad Gap Drainage Corridor" },
+      { name: "Kozhikode (Malabar Coast)", lat: 11.2588, lon: 75.7804, desc: "Kallayi & Korapuzha River Outlets" },
+      { name: "Thiruvananthapuram (Karamana Basin)", lat: 8.5241, lon: 76.9366, desc: "Southern Coastal & Urban Catchment" },
+      { name: "Kottayam (Meenachil Basin)", lat: 9.5916, lon: 76.5222, desc: "Vembanad Eastern Inflow Channel" },
+      { name: "Kannur (Valapattanam River Basin)", lat: 11.8745, lon: 75.3704, desc: "North Malabar Estuary" },
+      { name: "Kasaragod (Chandragiri River Basin)", lat: 12.4996, lon: 74.9869, desc: "Northernmost Catchment" }
+    ];
+
+    let searchDebounceTimer = null;
+    let currentSearchResults = [];
+
+    function handleSearchInput(query) {
+      const clearBtn = document.getElementById('mapSearchClear');
+      const resultsDiv = document.getElementById('mapSearchResults');
+      
+      if (!query || query.trim().length === 0) {
+        clearBtn.style.display = 'none';
+        resultsDiv.style.display = 'none';
+        resultsDiv.innerHTML = '';
+        currentSearchResults = [];
+        return;
+      }
+
+      clearBtn.style.display = 'block';
+      const q = query.trim().toLowerCase();
+
+      // 1. Filter local curated places
+      const localMatches = KERALA_PLACES.filter(p => 
+        p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)
+      );
+
+      currentSearchResults = [...localMatches];
+      renderSearchResults(currentSearchResults);
+
+      // 2. Debounced remote geocoder query via OpenStreetMap Nominatim
+      clearTimeout(searchDebounceTimer);
+      if (q.length >= 3) {
+        searchDebounceTimer = setTimeout(() => {
+          fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=in&limit=5`)
+            .then(r => r.json())
+            .then(data => {
+              const remoteMatches = data.map(item => ({
+                name: item.display_name.split(',')[0],
+                lat: parseFloat(item.lat),
+                lon: parseFloat(item.lon),
+                desc: item.display_name
+              }));
+
+              // Merge without duplicates
+              const all = [...localMatches];
+              remoteMatches.forEach(rm => {
+                if (!all.some(m => Math.abs(m.lat - rm.lat) < 0.01 && Math.abs(m.lon - rm.lon) < 0.01)) {
+                  all.push(rm);
+                }
+              });
+
+              currentSearchResults = all;
+              renderSearchResults(all);
+            })
+            .catch(() => {});
+        }, 300);
+      }
+    }
+
+    function renderSearchResults(items) {
+      const resultsDiv = document.getElementById('mapSearchResults');
+      if (!items || items.length === 0) {
+        resultsDiv.innerHTML = '<div style="padding:10px;font-size:11px;color:#71717a;text-align:center;">No places found</div>';
+        resultsDiv.style.display = 'block';
+        return;
+      }
+
+      let html = '';
+      items.slice(0, 8).forEach((item, idx) => {
+        html += `
+          <div class="search-result-item" onclick="goToPlace(${item.lat}, ${item.lon}, '${item.name.replace(/'/g, "\\'")}')">
+            <div class="title"><i class="fa-solid fa-location-dot" style="color:#38bdf8;"></i> ${item.name}</div>
+            <div class="subtitle">${item.desc}</div>
+          </div>
+        `;
+      });
+
+      resultsDiv.innerHTML = html;
+      resultsDiv.style.display = 'block';
+    }
+
+    function searchSubmitFirst() {
+      if (currentSearchResults && currentSearchResults.length > 0) {
+        const top = currentSearchResults[0];
+        goToPlace(top.lat, top.lon, top.name);
+      }
+    }
+
+    function clearPlaceSearch() {
+      document.getElementById('mapSearchInput').value = '';
+      document.getElementById('mapSearchClear').style.display = 'none';
+      document.getElementById('mapSearchResults').style.display = 'none';
+      currentSearchResults = [];
+    }
+
+    function goToPlace(lat, lon, name) {
+      document.getElementById('mapSearchResults').style.display = 'none';
+      document.getElementById('mapSearchInput').value = name;
+
+      map.flyTo([lat, lon], 13, { duration: 1.2 });
+
+      if (searchMarker) map.removeLayer(searchMarker);
+
+      const customIcon = L.divIcon({
+        className: 'custom-pin',
+        html: `<div style="background:#0284c7;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;border:2px solid #fff;box-shadow:0 0 14px rgba(2,132,199,0.9);"><i class="fa-solid fa-location-dot" style="font-size:12px;"></i></div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 24]
+      });
+
+      searchMarker = L.marker([lat, lon], { icon: customIcon }).addTo(map);
+
+      const popupContent = `
+        <div style="font-family:'Segoe UI',sans-serif;font-size:12px;line-height:1.5;min-width:180px;">
+          <strong style="color:#0284c7;font-size:13px;"><i class="fa-solid fa-location-dot"></i> ${name}</strong><br>
+          <span style="color:#64748b;">${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E</span><br>
+          <button class="btn btn-secondary" style="margin-top:8px;width:100%;font-size:11px;" onclick="setBBoxAround(${lat}, ${lon})">
+            <i class="fa-solid fa-crosshairs"></i> Set Simulation Domain (BBox) Here
+          </button>
+        </div>
+      `;
+
+      searchMarker.bindPopup(popupContent).openPopup();
+    }
+
+    function setBBoxAround(lat, lon) {
+      const halfSize = 0.20; // ~40km domain box
+      const minLon = (lon - halfSize).toFixed(2);
+      const maxLon = (lon + halfSize).toFixed(2);
+      const minLat = (lat - halfSize).toFixed(2);
+      const maxLat = (lat + halfSize).toFixed(2);
+
+      document.getElementById('minLon').value = minLon;
+      document.getElementById('maxLon').value = maxLon;
+      document.getElementById('minLat').value = minLat;
+      document.getElementById('maxLat').value = maxLat;
+
+      updateDomainRectangle();
+      zoomToBBox();
+      if (searchMarker) searchMarker.closePopup();
+    }
+
+    // --- Scenario Presets ---
+    let presets = {};
+    fetch('/api/presets')
+      .then(r => r.json())
+      .then(data => { presets = data; })
+      .catch(e => console.warn('Presets error', e));
+
+    function applyPreset() {
+      const key = document.getElementById('presetSelect').value;
+      if (key === 'custom' || !presets[key]) return;
+
+      const p = presets[key];
+      document.getElementById('minLon').value = p.bbox[0];
+      document.getElementById('minLat').value = p.bbox[1];
+      document.getElementById('maxLon').value = p.bbox[2];
+      document.getElementById('maxLat').value = p.bbox[3];
+
+      document.getElementById('rainInput').value = p.rainfall_mm;
+      updateRainDisplay(p.rainfall_mm);
+
+      document.getElementById('durInput').value = p.duration_hr;
+      updateDurDisplay(p.duration_hr);
+
+      document.getElementById('amcSelect').value = p.amc;
+      zoomToBBox();
+    }
+
+    // --- Sliders Display ---
+    function updateRainDisplay(val) {
+      document.getElementById('rainVal').innerText = val + " mm";
+      const cat = document.getElementById('imdCategory');
+      const v = parseFloat(val);
+      if (v < 15.6) cat.innerHTML = '<i class="fa-solid fa-cloud-sun"></i> Light Rain';
+      else if (v < 64.5) cat.innerHTML = '<i class="fa-solid fa-cloud-rain"></i> Moderate Rain';
+      else if (v < 115.6) cat.innerHTML = '<i class="fa-solid fa-cloud-showers-heavy"></i> Heavy Rain (IMD Yellow)';
+      else if (v < 204.5) cat.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Very Heavy Rain (IMD Orange)';
+      else cat.innerHTML = '<i class="fa-solid fa-radiation"></i> Extremely Heavy Rain (IMD Red)';
+    }
+
+    function updateDurDisplay(val) {
+      document.getElementById('durVal').innerText = parseFloat(val).toFixed(1) + " hr";
+    }
+
+    // Toggle Individual Overlays
+    function toggleOverlay(layerKey, isVisible) {
+      // Sync checkboxes in both sidebar and side panel
+      const chk1 = document.getElementById(`chk${capitalize(layerKey)}`);
+      const chk2 = document.getElementById(`pchk${capitalize(layerKey)}`);
+      if (chk1) chk1.checked = isVisible;
+      if (chk2) chk2.checked = isVisible;
+
+      if (!activeOverlays[layerKey]) return;
+
+      if (isVisible) {
+        activeOverlays[layerKey].addTo(map);
+      } else {
+        map.removeLayer(activeOverlays[layerKey]);
+      }
+    }
+
+    function capitalize(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    // Unified Opacity Control
+    function changeOpacity(val) {
+      const pct = Math.round(val * 100) + "%";
+      const el1 = document.getElementById('opacityVal');
+      const el2 = document.getElementById('sideOpacityVal');
+      const sl1 = document.getElementById('opacitySlider');
+      const sl2 = document.getElementById('sideOpacitySlider');
+
+      if (el1) el1.innerText = pct;
+      if (el2) el2.innerText = pct;
+      if (sl1) sl1.value = val;
+      if (sl2) sl2.value = val;
+
+      for (const k in activeOverlays) {
+        if (activeOverlays[k]) activeOverlays[k].setOpacity(parseFloat(val));
+      }
+    }
+
+    // --- Live Weather Forecast ---
+    function fetchLiveWeather() {
+      const minLon = parseFloat(document.getElementById('minLon').value);
+      const minLat = parseFloat(document.getElementById('minLat').value);
+      const maxLon = parseFloat(document.getElementById('maxLon').value);
+      const maxLat = parseFloat(document.getElementById('maxLat').value);
+
+      const centerLat = (minLat + maxLat) / 2.0;
+      const centerLon = (minLon + maxLon) / 2.0;
+
+      const infoDiv = document.getElementById('weatherInfo');
+      infoDiv.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Contacting Open-Meteo API...';
+
+      fetch(`/api/weather?lat=${centerLat}&lon=${centerLon}`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.status === 'success') {
+            const s = res.summary;
+            infoDiv.innerHTML = `
+              <div><b>Next 24h Rain:</b> ${s.total_24h_mm} mm | <b>48h:</b> ${s.total_48h_mm} mm</div>
+              <div><b>Peak Hourly:</b> ${s.max_hourly_mm} mm/h</div>
+              <button class="btn btn-secondary" style="margin-top: 5px; width: 100%;" onclick="applyWeatherRain(${s.suggested_rainfall_mm}, ${s.suggested_duration_hr})">
+                <i class="fa-solid fa-check"></i> Apply ${s.suggested_rainfall_mm}mm / ${s.suggested_duration_hr}h
+              </button>
+            `;
+          } else {
+            infoDiv.innerText = "Error fetching forecast.";
+          }
+        })
+        .catch(err => {
+          infoDiv.innerText = "Forecast fetch failed: " + err.message;
+        });
+    }
+
+    function applyWeatherRain(rain, dur) {
+      document.getElementById('rainInput').value = rain;
+      updateRainDisplay(rain);
+      document.getElementById('durInput').value = dur;
+      updateDurDisplay(dur);
+    }
+
+    // --- Simulation Execution ---
+    function runSimulation() {
+      const minLon = parseFloat(document.getElementById('minLon').value);
+      const minLat = parseFloat(document.getElementById('minLat').value);
+      const maxLon = parseFloat(document.getElementById('maxLon').value);
+      const maxLat = parseFloat(document.getElementById('maxLat').value);
+      const rain = parseFloat(document.getElementById('rainInput').value);
+      const dur = parseFloat(document.getElementById('durInput').value);
+      const amc = document.getElementById('amcSelect').value;
+      const demType = document.getElementById('demSelect').value;
+
+      const payload = {
+        bbox: [minLon, minLat, maxLon, maxLat],
+        rainfall_mm: rain,
+        duration_hr: dur,
+        amc: amc,
+        dem_type: demType,
+        use_synthetic: (demType === 'synthetic')
+      };
+
+      const overlay = document.getElementById('progressOverlay');
+      const progressText = document.getElementById('progressText');
+      overlay.style.display = 'flex';
+
+      if (demType !== 'synthetic') {
+        progressText.innerText = 'Hydro-conditioning Copernicus GLO-30 DEM & FastFlood routing...';
+      } else {
+        progressText.innerText = 'Initializing 5-Step FastFlood Algorithm...';
+      }
+
+      document.getElementById('runBtn').disabled = true;
+
+      fetch('/api/simulate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(r => {
+        if (!r.ok) return r.json().then(err => { throw new Error(err.detail || 'Simulation error'); });
+        return r.json();
+      })
+      .then(data => {
+        overlay.style.display = 'none';
+        document.getElementById('runBtn').disabled = false;
+        renderSimulationResults(data);
+      })
+      .catch(err => {
+        overlay.style.display = 'none';
+        document.getElementById('runBtn').disabled = false;
+        alert('Simulation Failed: ' + err.message);
+      });
+    }
+
+    // --- Render Overlays and Dashboard ---
+    function renderSimulationResults(data) {
+      const bounds = data.bounds;
+      const overlays = data.overlays;
+      const opacity = parseFloat(document.getElementById('opacitySlider').value);
+
+      // Clean old layers
+      if (activeOverlays.depth) map.removeLayer(activeOverlays.depth);
+      if (activeOverlays.risk) map.removeLayer(activeOverlays.risk);
+      if (activeOverlays.velocity) map.removeLayer(activeOverlays.velocity);
+
+      // Create new overlays
+      activeOverlays.depth = L.imageOverlay(overlays.depth, bounds, { opacity: opacity });
+      activeOverlays.risk = L.imageOverlay(overlays.risk, bounds, { opacity: opacity });
+      activeOverlays.velocity = L.imageOverlay(overlays.velocity, bounds, { opacity: opacity });
+
+      // Apply initial layer toggles based on checkboxes
+      const showDepth = document.getElementById('chkDepth').checked;
+      const showRisk = document.getElementById('chkRisk').checked;
+      const showVel = document.getElementById('chkVelocity').checked;
+
+      if (showDepth) activeOverlays.depth.addTo(map);
+      if (showRisk) activeOverlays.risk.addTo(map);
+      if (showVel) activeOverlays.velocity.addTo(map);
+
+      map.fitBounds(bounds, { padding: [30, 30] });
+
+      const stats = data.stats;
+      const ext = stats.flood_extent;
+      const dep = stats.depth_stats_m;
+      const risk = stats.risk_classes;
+
+      const setElText = (id, txt) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = txt;
+      };
+      const setElHref = (id, href) => {
+        const el = document.getElementById(id);
+        if (el && href) el.href = href;
+      };
+
+      setElText('floodedArea', ext.flooded_area_km2.toFixed(1) + " km²");
+      setElText('floodedPct', ext.flood_fraction_pct.toFixed(1) + "% of domain (" + stats.domain.total_area_km2.toFixed(1) + " km²)");
+      setElText('maxDepth', dep.max.toFixed(2) + " m");
+      setElText('peakQ', (stats.input.intensity_mm_hr * ext.flooded_area_km2 * 0.28).toFixed(1) + " m³/s");
+      setElText('activeFlowArea', (ext.active_flow_area_km2 || 0).toFixed(1) + " km² Flow");
+      setElText('puddleArea', (ext.puddle_ponding_area_km2 || 0).toFixed(1) + " km² Puddles");
+
+      const areas = risk.areas_km2;
+      setElText('areaDry', (areas.dry || 0).toFixed(0));
+      setElText('areaLow', (areas.low || 0).toFixed(0));
+      setElText('areaMed', (areas.medium || 0).toFixed(0));
+      setElText('areaHigh', (areas.high || 0).toFixed(0));
+      setElText('areaExtr', (areas.extreme || 0).toFixed(0));
+
+      const tot = stats.domain.total_area_km2 || 1;
+      const setWidth = (id, pct) => { const el = document.getElementById(id); if (el) el.style.width = pct + "%"; };
+      setWidth('barDry', (areas.dry || 0) / tot * 100);
+      setWidth('barLow', (areas.low || 0) / tot * 100);
+      setWidth('barMed', (areas.medium || 0) / tot * 100);
+      setWidth('barHigh', (areas.high || 0) / tot * 100);
+      setWidth('barExtr', (areas.extreme || 0) / tot * 100);
+
+      const banner = document.getElementById('alertBanner');
+      const title = document.getElementById('alertTitle');
+      const sub = document.getElementById('alertSub');
+
+      if (banner && title && sub) {
+        if (dep.max > 2.0 || ext.flood_fraction_pct > 30) {
+          banner.className = 'alert-banner alert-red';
+          title.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> RED ALERT: CATASTROPHIC FLOOD';
+          sub.innerText = 'Severe life and property risk across ' + ext.flooded_area_km2.toFixed(0) + ' km². Immediate evacuation indicated.';
+        } else if (dep.max > 0.8 || ext.flood_fraction_pct > 15) {
+          banner.className = 'alert-banner alert-orange';
+          title.innerHTML = '<i class="fa-solid fa-bell"></i> ORANGE ALERT: MODERATE-HIGH FLOOD';
+          sub.innerText = 'Floodwaters exceed waist depth in valley channels. Monitor river stage.';
+        } else {
+          banner.className = 'alert-banner alert-green';
+          title.innerHTML = '<i class="fa-solid fa-circle-check"></i> NORMAL / LOW FLOOD HAZARD';
+          sub.innerText = 'Inundation mostly confined to river channel banks.';
+        }
+      }
+
+      const dl = data.downloads;
+      setElHref('dlShp', dl.shapefile_zip);
+      setElHref('dlGeojson', dl.geojson);
+      setElHref('dlDepth', dl.depth_geotiff);
+      setElHref('dlRisk', dl.risk_geotiff);
+      setElHref('dlVelocity', dl.velocity_geotiff);
+      setElHref('dlPng', dl.static_map);
+      setElHref('dlHtml', dl.interactive_html);
+      setElHref('dlJson', dl.report_json);
+    }
+
+    // --- Interactive Point Query on Map Click ---
+    map.on('click', function(e) {
+      const lat = e.latlng.lat;
+      const lon = e.latlng.lng;
+
+      fetch(`/api/query_point?lat=${lat}&lon=${lon}`)
+        .then(r => r.json())
+        .then(res => {
+          if (res.found) {
+            const content = `
+              <div style="font-family: 'Segoe UI', sans-serif; font-size: 11.5px; line-height: 1.5; color: #111;">
+                <strong style="color: #0284c7;"><i class="fa-solid fa-location-dot"></i> Point Inspection</strong><br>
+                <b>Coordinates:</b> ${res.lat.toFixed(4)}°N, ${res.lon.toFixed(4)}°E<br>
+                <b>Baseline River Depth:</b> ${res.base_river_depth_m} m<br>
+                <b>Flood Water Depth:</b> <span style="font-size: 13px; font-weight: bold; color: #0284c7;">${res.depth_m} m</span><br>
+                <b>Total Water Depth:</b> ${res.total_water_depth_m} m<br>
+                <b>Flow Type:</b> <span style="color: #0284c7; font-weight: bold;">${res.flow_type}</span><br>
+                <b>Flow Velocity:</b> ${res.velocity_ms} m/s<br>
+                <b>Ground Elevation:</b> ${res.elevation_m} m | <b>HAND:</b> ${res.hand_m} m<br>
+                <b>Hazard Category:</b> <span style="color: #dc143c; font-weight: bold;">${res.risk_label}</span>
+              </div>
+            `;
+            L.popup().setLatLng(e.latlng).setContent(content).openOn(map);
+
+            document.getElementById('inspectorText').innerHTML = `
+              <b>Point:</b> ${res.lat.toFixed(3)}°, ${res.lon.toFixed(3)}° | <b>Flow:</b> ${res.flow_type}<br>
+              <b>Flood Depth:</b> ${res.depth_m}m (Base: ${res.base_river_depth_m}m) | <b>Velocity:</b> ${res.velocity_ms}m/s<br>
+              <b>Risk:</b> ${res.risk_label}
+            `;
+          }
+        });
+    });
+
+    // Close search dropdown on click outside
+    document.addEventListener('click', (e) => {
+      const searchContainer = document.querySelector('.map-search-container');
+      const resultsDiv = document.getElementById('mapSearchResults');
+      if (searchContainer && !searchContainer.contains(e.target)) {
+        if (resultsDiv) resultsDiv.style.display = 'none';
+      }
+    });
+
+    // --- Dynamic Light / Dark Theme Synchronization ---
+    function setInundationTheme(theme) {
+      const isLight = (theme === 'light');
+      document.body.classList.toggle('light-theme', isLight);
+      document.documentElement.classList.toggle('light-theme', isLight);
+      document.body.classList.toggle('dark-theme', !isLight);
+      document.documentElement.classList.toggle('dark-theme', !isLight);
+    }
+
+    // Listen for real-time postMessage theme notifications from parent window
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'SET_THEME') {
+        setInundationTheme(e.data.theme);
+      }
+    });
+
+    // Detect initial theme on DOM load
+    function initTheme() {
+      let t = 'dark';
+      try {
+        if (localStorage.getItem('vellam-theme')) {
+          t = localStorage.getItem('vellam-theme');
+        } else if (window.parent && window.parent.document && window.parent.document.body.classList.contains('light-theme')) {
+          t = 'light';
+        }
+      } catch (err) {}
+      setInundationTheme(t);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      updateDomainRectangle();
+      zoomToBBox();
+    });
+  </script>
+</body>
+</html>

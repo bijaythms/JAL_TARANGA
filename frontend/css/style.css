@@ -1,0 +1,1438 @@
+/* ==============================================================================
+   Jal Taranga — Kerala Watershed & Disaster Intelligence Platform
+   Core Stylesheet & Leaflet GIS Theming
+   ============================================================================== */
+
+body {
+  background-color: #000000;
+  color: #F4F4F6;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Application shell: a calm, persistent sidebar keeps the workspace navigation
+   available without crowding the top bar. */
+.app-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 260px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: #0C0C0E;
+  border-right: 1px solid #27272A;
+}
+
+.app-sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  aspect-ratio: auto;
+  min-height: 120px;
+  padding: 0;
+  border-bottom: 1px solid #27272A;
+}
+
+.app-logo-wrap {
+  width: 100%;
+  max-width: none;
+  height: 108px;
+  aspect-ratio: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: transparent;
+  padding: 6px 14px;
+}
+
+.app-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+}
+
+.app-logo-light {
+  display: none !important;
+}
+
+body.light-theme .app-logo-dark {
+  display: none !important;
+}
+
+body.light-theme .app-logo-light {
+  display: block !important;
+}
+
+.app-sidebar-nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  padding: 16px 12px 12px;
+}
+
+.app-sidebar-label {
+  margin: 0 0 7px 8px;
+  color: #8E8E98;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.side-nav-btn {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 11px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #A1A1AA;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  transition: background-color .18s ease, color .18s ease;
+}
+
+.side-nav-btn:hover {
+  color: #ffffff;
+  background: #18181B;
+}
+
+.side-nav-btn i {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.side-nav-btn.is-active {
+  color: #FFFFFF;
+  background: rgba(228, 228, 231, .12);
+  box-shadow: inset 3px 0 0 #E4E4E7;
+}
+
+.side-nav-btn.hidden,
+.nav-btn.hidden,
+.app-sidebar-nav .nav-btn.hidden,
+.hidden,
+[hidden] {
+  display: none !important;
+}
+
+.app-sidebar-actions {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid #27272A;
+}
+
+.app-sidebar-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  transition: filter .18s ease, background-color .18s ease;
+}
+
+.app-sidebar-action:hover { filter: brightness(1.15); }
+.report-action { color: #fca5a5; background: rgba(127, 29, 29, .35); border: 1px solid rgba(185, 28, 28, .65); }
+.launch-action { color: #000000; background: #E4E4E7; }
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  margin-left: 260px;
+  background: rgba(18, 18, 20, .96);
+  border-bottom: 1px solid #27272A;
+  backdrop-filter: blur(12px);
+  overflow: visible !important;
+}
+
+#header-user-pill-container {
+  position: relative;
+  z-index: 2000;
+}
+
+#header-user-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 260px;
+  background: #141416;
+  border: 1px solid #27272A;
+  border-radius: 12px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(228, 228, 231, 0.08);
+  padding: 8px;
+  z-index: 99999 !important;
+  backdrop-filter: blur(20px);
+}
+
+body.light-theme #header-user-dropdown {
+  background: #ffffff !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08) !important;
+  color: #111827 !important;
+}
+
+body.light-theme #header-user-dropdown .user-dropdown-divider {
+  border-color: #E5E7EB !important;
+}
+
+body.light-theme #header-user-dropdown .user-dropdown-title {
+  color: #111827 !important;
+}
+
+body.light-theme #header-user-dropdown .user-dropdown-sub {
+  color: #4B5563 !important;
+}
+
+body.light-theme #header-user-dropdown button:hover:not(.logout-btn) {
+  background-color: #F3F4F6 !important;
+  color: #111827 !important;
+}
+
+body.light-theme #header-user-dropdown .logout-btn:hover {
+  background-color: #FEE2E2 !important;
+  color: #DC2626 !important;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  color: #A1A1AA;
+  background: #18181B;
+  border: 1px solid #27272A;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+
+.theme-toggle:hover { color: #ffffff; border-color: #71717A; }
+
+.team-photo-slot {
+  min-height: 170px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px dashed #3F3F46;
+  border-radius: 10px;
+  color: #E4E4E7;
+  background: rgba(228, 228, 231, .04);
+  font-size: 13px;
+  font-weight: 600;
+}
+.team-photo-slot small { color: #8E8E98; font-size: 11px; font-weight: 400; }
+body.light-theme .team-photo-slot { background: #F9FAFB; border-color: #D1D5DB; color: #111827; }
+body.light-theme .team-photo-slot small { color: #6B7280; }
+
+/* Light theme overrides for the application shell and Tailwind utility colours (Matte Carbon & Zinc Architecture). */
+body.light-theme { background: #F3F4F6; color: #111827; }
+body.light-theme .app-sidebar,
+body.light-theme .app-header { background: #FFFFFF; border-color: #D1D5DB; }
+body.light-theme .app-header-motto { color: #047857 !important; }
+body.light-theme .app-sidebar-brand,
+body.light-theme .app-sidebar-actions { border-color: #E5E7EB; }
+body.light-theme .app-logo-wrap { background: #FFFFFF; border: 1px solid #E5E7EB; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+body.light-theme .side-nav-btn { color: #4B5563; }
+body.light-theme .side-nav-btn:hover { color: #111827; background: #F3F4F6; }
+body.light-theme .side-nav-btn.is-active { color: #111827; background: #E5E7EB; box-shadow: inset 3px 0 0 #1F2937; }
+body.light-theme .theme-toggle { color: #374151; background: #F3F4F6; border-color: #D1D5DB; }
+body.light-theme .theme-toggle:hover { color: #111827; border-color: #9CA3AF; }
+body.light-theme .launch-action {
+  color: #FFFFFF;
+  background: #1F2937;
+}
+body.light-theme .report-action {
+  color: #ffffff;
+  background: #DC2626;
+  border-color: #B91C1C;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, .18);
+}
+body.light-theme .bg-vellam-bg { background-color: #F3F4F6 !important; }
+body.light-theme .bg-vellam-panel { background-color: #FFFFFF !important; }
+body.light-theme .bg-vellam-card { background-color: #FFFFFF !important; }
+body.light-theme .bg-vellam-bg\/70 { background-color: rgba(243, 244, 246, .92) !important; }
+body.light-theme .bg-vellam-bg\/40 { background-color: rgba(243, 244, 246, .88) !important; }
+body.light-theme .bg-vellam-panel\/95 { background-color: rgba(255, 255, 255, .95) !important; }
+body.light-theme .border-vellam-border { border-color: #D1D5DB !important; }
+body.light-theme :not(#view-login):not(#view-login *) .text-white,
+body.light-theme .text-white:not(#view-login):not(#view-login *) { color: #111827 !important; }
+body.light-theme .text-slate-300 { color: #374151 !important; }
+body.light-theme .text-slate-200 { color: #1F2937 !important; }
+body.light-theme .text-vellam-muted { color: #4B5563 !important; }
+body.light-theme .text-slate-500 { color: #6B7280 !important; }
+body.light-theme input,
+body.light-theme select,
+body.light-theme textarea { color: #111827 !important; background-color: #FFFFFF !important; border-color: #D1D5DB !important; }
+body.light-theme select option { color: #111827 !important; background-color: #FFFFFF !important; }
+
+#watershed-select,
+#district-select,
+#rep-dist,
+#sim-basin-select {
+  background-color: #141416;
+  color: #F4F4F6 !important;
+  border-color: #27272A;
+}
+
+#watershed-select option,
+#district-select option,
+#rep-dist option,
+#sim-basin-select option {
+  background-color: #141416;
+  color: #F4F4F6;
+}
+
+body.light-theme #watershed-select,
+body.light-theme #district-select,
+body.light-theme #rep-dist,
+body.light-theme #sim-basin-select {
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+  border-color: #D1D5DB !important;
+}
+
+body.light-theme #watershed-select option,
+body.light-theme #district-select option,
+body.light-theme #rep-dist option,
+body.light-theme #sim-basin-select option {
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+}
+
+body.light-theme .custom-scroll::-webkit-scrollbar-track { background: #F3F4F6; }
+body.light-theme .custom-scroll::-webkit-scrollbar-thumb { background: #D1D5DB; }
+
+/* Light, clean controls over the satellite map. */
+body.light-theme #view-gis {
+  background: #F3F4F6;
+}
+body.light-theme #legend-sidepanel,
+body.light-theme #map-wrapper > div.absolute.bg-vellam-panel\/95 {
+  border-color: #D1D5DB !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .08) !important;
+}
+body.light-theme #legend-sidepanel .bg-vellam-bg,
+body.light-theme #view-gis .bg-vellam-cyan\/20 {
+  background-color: #F3F4F6 !important;
+}
+body.light-theme #view-gis .bg-cyan-950,
+body.light-theme #view-gis .bg-cyan-950\/60 {
+  background-color: #E5E7EB !important;
+}
+body.light-theme #view-gis .text-cyan-300 { color: #0284C7 !important; }
+body.light-theme #view-gis .text-emerald-400 { color: #059669 !important; }
+
+/* Clean light-mode landing page. */
+body.light-theme #view-home { background: #F3F4F6; }
+
+/* Minimalist Executive Command Header */
+#home-command-header {
+  position: relative;
+  transition: all 0.25s ease-in-out;
+}
+body.light-theme #home-command-header {
+  background-color: #FFFFFF !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+body.light-theme #home-command-header #hero-heading,
+body.light-theme #home-command-header #hero-brand-title {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  text-shadow: none !important;
+}
+body.light-theme #home-command-header .bg-vellam-bg\/70 {
+  background-color: #F9FAFB !important;
+  border-color: #E5E7EB !important;
+}
+
+/* ==========================================================================
+   Full-Screen Authentication & Registration Portal (#view-login)
+   Matches Kerala Backwaters photographic mockup with separated Admin Portal
+   ========================================================================== */
+#view-login {
+  background-color: #011422;
+  overflow: hidden !important;
+}
+
+@media (max-height: 580px) {
+  #view-login {
+    overflow-y: auto !important;
+  }
+}
+
+/* Auth Top Header: Crisp Pure White */
+#auth-top-header h2,
+#auth-top-header .auth-header-navy {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+#auth-top-header .auth-header-blue {
+  color: rgba(255, 255, 255, 0.92) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.92) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+#auth-top-header .auth-header-sub {
+  color: rgba(255, 255, 255, 0.85) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Left Scenic Showcase Column on deep oceanic wash: Crisp Pure White */
+#view-login .auth-scenic-content h1,
+#view-login .auth-scenic-content h2,
+#view-login .auth-scenic-content .auth-text-white,
+#view-login .auth-scenic-content .text-white,
+#view-login .auth-scenic-content [class*="text-white"] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+#view-login .auth-scenic-content .text-slate-100,
+#view-login .auth-scenic-content .text-slate-200,
+#view-login .auth-scenic-content .text-slate-300 {
+  color: #f1f5f9 !important;
+}
+#view-login .auth-scenic-content .text-cyan-400 {
+  color: #22d3ee !important;
+}
+#view-login .auth-scenic-content .text-cyan-300 {
+  color: #67e8f9 !important;
+}
+
+/* Auth card inputs and labels inside #view-login */
+#view-login form h3 {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+}
+#view-login form p {
+  color: #64748b !important;
+}
+#view-login form label {
+  color: #334155 !important;
+}
+#view-login form input,
+#view-login form select {
+  color: #0f172a !important;
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+#view-login form input:focus,
+#view-login form select:focus {
+  border-color: #0284c7 !important;
+  outline: none;
+}
+
+/* Matte Carbon & Zinc Dark Mode Shell */
+body:not(.light-theme) {
+  background: #000000;
+  color: #F4F4F6;
+}
+
+body:not(.light-theme) .app-sidebar {
+  background: #0C0C0E;
+  border-right: 1px solid #27272A;
+}
+
+body:not(.light-theme) .app-sidebar-brand {
+  background: #0C0C0E;
+  border-bottom: 1px solid #27272A;
+}
+
+body:not(.light-theme) .app-sidebar-label {
+  color: #8E8E98;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  letter-spacing: .12em;
+}
+
+body:not(.light-theme) .side-nav-btn {
+  color: #A1A1AA;
+}
+
+body:not(.light-theme) .side-nav-btn:hover {
+  color: #FFFFFF;
+  background: #18181B;
+}
+
+body:not(.light-theme) .side-nav-btn.is-active {
+  color: #FFFFFF;
+  background: rgba(228, 228, 231, .10);
+  box-shadow: inset 3px 0 0 #E4E4E7;
+}
+
+body:not(.light-theme) .app-sidebar-actions {
+  border-top: 1px solid #27272A;
+}
+
+.app-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: calc(100% - 260px);
+  margin-left: 260px;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.app-content > main {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+}
+
+/* Charts inherit the width of their card instead of forcing the page wider. */
+canvas {
+  max-width: 100% !important;
+}
+
+/* Preserve data-table labels and values; narrow screens scroll only the table. */
+#view-ranking th,
+#view-ranking td,
+#view-admin th,
+#view-admin td {
+  white-space: nowrap;
+}
+
+@media (max-width: 1023px) {
+  .app-sidebar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    max-height: none;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-right: 0;
+    border-bottom: 1px solid #102629;
+  }
+  .app-sidebar-brand { width: 200px; min-width: 200px; min-height: 112px; aspect-ratio: auto; padding: 0; border-bottom: 0; border-right: 1px solid #102629; }
+  .app-logo-wrap { width: 100%; max-width: none; }
+  .app-sidebar-nav { flex: none; flex-direction: row; padding: 10px; gap: 4px; }
+  .app-sidebar-label { display: none; }
+  .side-nav-btn { width: auto; white-space: nowrap; padding: 8px 10px; }
+  .app-sidebar-actions { display: flex; padding: 10px; border: 0; }
+  .app-sidebar-action { white-space: nowrap; }
+  .app-header { margin-left: 0; padding: 0 14px; gap: 12px; }
+  .app-header > div:first-child { min-width: 0; white-space: nowrap; }
+  .app-content { width: 100%; margin-left: 0; }
+}
+
+.font-malayalam {
+  font-family: 'Noto Sans Malayalam', "Segoe UI", sans-serif;
+}
+
+/* Standard reading typography replaces decorative UI text styles. */
+#view-home h1 { letter-spacing: -.035em; }
+#view-home h2 { font-weight: 600; letter-spacing: 0; }
+#view-home .font-mono { font-family: "Segoe UI", Arial, sans-serif; letter-spacing: .02em; }
+
+#map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 64px);
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #020708 !important;
+  z-index: 1;
+}
+
+.snip-cursor {
+  cursor: crosshair !important;
+}
+
+.delineate-cursor {
+  cursor: crosshair !important;
+}
+
+/* Custom Leaflet Dark Popup */
+.vellam-popup .leaflet-popup-content-wrapper {
+  background: #061214;
+  color: #E2E8F0;
+  border: 1px solid #102629;
+  border-radius: 8px;
+  font-size: 11px;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.8);
+}
+
+.vellam-popup .leaflet-popup-tip {
+  background: #061214;
+}
+
+/* Hide Leaflet bottom attribution line across all maps */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+/* Custom iOS-Style Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 18px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1a3033;
+  transition: .25s;
+  border-radius: 20px;
+  border: 1px solid #234247;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #758A99;
+  transition: .25s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #00E5FF;
+  border-color: #00E5FF;
+}
+
+input:checked + .slider:before {
+  transform: translateX(14px);
+  background-color: #020708;
+}
+
+/* Custom Slim Scrollbars */
+.custom-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #020708;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #102629;
+  border-radius: 3px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: #00E5FF;
+}
+
+/* ==============================================================================
+   MAP VIEWPORT EXPANSION & HUD OVERLAY TOGGLES (Zen Mode / Clean Map)
+   ============================================================================== */
+.sidebar-collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Floating Overlay Panels: Cleanly controlled by .hidden class without being suppressed by zen mode */
+#legend-sidepanel:not(.hidden),
+#layer-controls-panel:not(.hidden),
+#hud-telemetry-panel:not(.hidden) {
+  display: block !important;
+}
+
+#legend-sidepanel.hidden,
+#layer-controls-panel.hidden,
+#hud-telemetry-panel.hidden {
+  display: none !important;
+}
+
+/* Floating Clean Map Controls Dock (Ultra-Sleek & Compact) */
+.map-dock-pill {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(6, 18, 20, 0.82);
+  border: 1px solid rgba(16, 38, 41, 0.85);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 1px rgba(0, 229, 255, 0.25);
+  border-radius: 9999px;
+  padding: 3px 5px;
+}
+
+body.light-theme .map-dock-pill {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(201, 220, 223, 0.9);
+  box-shadow: 0 6px 16px rgba(8, 74, 91, 0.12);
+}
+
+.map-dock-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #94A3B8;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.map-dock-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+body.light-theme .map-dock-btn {
+  color: #456367;
+}
+
+body.light-theme .map-dock-btn:hover {
+  color: #102629;
+  background: #E6F2F3;
+  border-color: #B8D1D5;
+}
+
+.map-dock-btn.is-active {
+  color: #00E5FF;
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.35);
+}
+
+body.light-theme .map-dock-btn.is-active {
+  color: #007F91;
+  background: #DFF7FA;
+  border-color: #0097A7;
+}
+
+.map-dock-btn i,
+.map-dock-btn svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* River Reach Glow on Satellite */
+.river-glow-line {
+  filter: drop-shadow(0 0 5px rgba(0, 229, 255, 0.7));
+}
+
+/* Floating Toast Notification */
+#map-toast {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}
+#map-toast.toast-hidden {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
+/* ==============================================================================
+   MONSOON INUNDATION SIMULATOR STYLING (Dark & Light Theme High-Contrast)
+   ============================================================================== */
+.sim-scenario-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sim-scenario-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Dark theme active states */
+.sim-scenario-btn.is-active-mod {
+  border: 2px solid #10B981 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+}
+
+.sim-scenario-btn.is-active-high {
+  border: 2px solid #00E5FF !important;
+  background: rgba(0, 229, 255, 0.15) !important;
+}
+
+.sim-scenario-btn.is-active-ext {
+  border: 2px solid #EF4444 !important;
+  background: rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Light theme high-visibility overrides */
+body.light-theme .sim-scenario-btn {
+  background-color: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+}
+
+body.light-theme .sim-scenario-btn .text-slate-100 {
+  color: #0F172A !important;
+}
+
+body.light-theme .sim-scenario-btn .text-slate-400 {
+  color: #475569 !important;
+}
+
+body.light-theme .sim-scenario-btn .text-slate-300 {
+  color: #334155 !important;
+}
+
+body.light-theme .sim-scenario-btn.is-active-mod {
+  background-color: #ECFDF5 !important;
+  border: 2px solid #059669 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25) !important;
+}
+
+body.light-theme .sim-scenario-btn.is-active-mod .text-slate-100 {
+  color: #065F46 !important;
+}
+
+body.light-theme .sim-scenario-btn.is-active-high {
+  background-color: #F0F9FF !important;
+  border: 2px solid #0284C7 !important;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
+}
+
+body.light-theme .sim-scenario-btn.is-active-high .text-cyan-300,
+body.light-theme .sim-scenario-btn.is-active-high .text-slate-100 {
+  color: #0369A1 !important;
+}
+
+body.light-theme .sim-scenario-btn.is-active-ext {
+  background-color: #FEF2F2 !important;
+  border: 2px solid #DC2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.25) !important;
+}
+
+body.light-theme .sim-scenario-btn.is-active-ext .text-red-400,
+body.light-theme .sim-scenario-btn.is-active-ext .text-slate-100 {
+  color: #991B1B !important;
+}
+
+/* Light Theme Card and Background Overrides */
+body.light-theme #view-simulator {
+  color: #111827;
+}
+
+body.light-theme #view-simulator h1 {
+  color: #111827 !important;
+}
+
+body.light-theme #view-simulator .bg-vellam-panel {
+  background-color: #FFFFFF !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme #view-simulator .bg-vellam-bg {
+  background-color: #F3F4F6 !important;
+  border-color: #E5E7EB !important;
+}
+
+body.light-theme #view-simulator .text-white {
+  color: #111827 !important;
+}
+
+body.light-theme #view-simulator select {
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+  border-color: #D1D5DB !important;
+}
+
+body.light-theme #view-simulator table thead {
+  background-color: #F9FAFB !important;
+  color: #4B5563 !important;
+}
+
+body.light-theme #view-simulator table tbody tr {
+  color: #111827 !important;
+}
+
+body.light-theme #view-simulator table tbody tr:hover {
+  background-color: #F3F4F6 !important;
+}
+
+body.light-theme #sim-inundation-map {
+  background-color: #E5E7EB;
+  border-color: #D1D5DB !important;
+}
+
+/* Pulsating animation for critical flood choke points */
+@keyframes floodPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.flood-choke-marker {
+  width: 14px;
+  height: 14px;
+  background-color: #EF4444;
+  border: 2px solid #FFFFFF;
+  border-radius: 50%;
+  animation: floodPulse 1.8s infinite;
+}
+
+/* Animated river centerline pulse */
+@keyframes riverDashPulse {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -40; }
+}
+
+.leaflet-overlay-pane path[stroke-dasharray="8, 6"] {
+  animation: riverDashPulse 2.5s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.7));
+}
+
+/* Sentinel-1 Radar Water Scanline Glow */
+.leaflet-overlay-pane path[stroke-dasharray="4, 4"] {
+  filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.5));
+}
+
+/* Smooth continuous bathymetric depth gradient blending */
+#sim-inundation-map .leaflet-overlay-pane path {
+  transition: fill-opacity 0.3s ease, stroke-opacity 0.3s ease;
+}
+
+/* ==============================================================================
+   ISRO BHUVAN SRISHTI & DRISHTI PLATFORM STYLING
+   ============================================================================== */
+.srishti-pin-wrapper {
+  background: transparent;
+  border: none;
+}
+
+.srishti-pin-wrapper:hover > div {
+  transform: translate(-14px, -14px) scale(1.22) !important;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 20px #A855F7 !important;
+}
+
+body.light-theme #view-satellite .bg-vellam-panel {
+  background-color: #FFFFFF !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme #view-satellite .bg-vellam-bg {
+  background-color: #F3F4F6 !important;
+  border-color: #E5E7EB !important;
+}
+
+body.light-theme #view-satellite .text-white {
+  color: #111827 !important;
+}
+
+body.light-theme #view-satellite select,
+body.light-theme #drishti-geotagger-modal select,
+body.light-theme #drishti-geotagger-modal input {
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+  border-color: #D1D5DB !important;
+}
+
+body.light-theme #view-satellite table thead tr {
+  background-color: #F9FAFB !important;
+  color: #4B5563 !important;
+}
+
+body.light-theme #view-satellite table tbody tr {
+  color: #111827 !important;
+}
+
+body.light-theme #view-satellite table tbody tr:hover {
+  background-color: #F3F4F6 !important;
+}
+
+body.light-theme #drishti-geotagger-modal .bg-vellam-panel,
+body.light-theme #drishti-photo-modal .bg-vellam-panel {
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+}
+
+body.light-theme #drishti-geotagger-modal .bg-vellam-bg,
+body.light-theme #drishti-photo-modal .bg-vellam-bg {
+  background-color: #F3F4F6 !important;
+}
+
+/* Light theme overrides for View Home Dashboard */
+body.light-theme #view-home .bg-vellam-panel {
+  background-color: #FFFFFF !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme #view-home .bg-vellam-bg {
+  background-color: #F3F4F6 !important;
+  border-color: #E5E7EB !important;
+}
+
+body.light-theme #view-home .text-white {
+  color: #111827 !important;
+}
+
+body.light-theme #view-home table thead tr {
+  color: #4B5563 !important;
+  border-color: #E5E7EB !important;
+}
+
+body.light-theme #view-home table tbody tr {
+  color: #111827 !important;
+}
+
+body.light-theme #view-home table tbody tr:hover {
+  background-color: #F3F4F6 !important;
+}
+
+/* ===================================================
+   GEOTAGGING MINI-MAP & CITIZEN REPORTING STYLES
+   =================================================== */
+#rep-mini-map {
+  min-height: 180px;
+  width: 100%;
+  border-radius: 0.75rem;
+  z-index: 10;
+}
+
+#rep-mini-map .leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+#rep-mini-map .leaflet-control-zoom a {
+  background-color: #0b1526 !important;
+  color: #38bdf8 !important;
+  border-color: #1e293b !important;
+}
+
+#rep-mini-map .leaflet-control-zoom a:hover {
+  background-color: #1e293b !important;
+  color: #7dd3fc !important;
+}
+
+/* ===================================================
+   DYNAMIC NOTIFICATION DRAWER
+   =================================================== */
+#notification-dropdown {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: notifSlideDown 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top right;
+}
+
+@keyframes notifSlideDown {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+#notification-list-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+#notification-list-container::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 9999px;
+}
+
+#notification-list-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.4);
+}
+
+/* ===================================================
+   LIGHT THEME OVERRIDES FOR COMMUNITY & ADMIN VIEWS
+   =================================================== */
+body.light-theme #notification-dropdown {
+  background-color: #FFFFFF !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08) !important;
+}
+
+body.light-theme #notification-dropdown .text-white {
+  color: #111827 !important;
+}
+
+body.light-theme #notification-dropdown .bg-slate-900\/50,
+body.light-theme #notification-dropdown .bg-vellam-panel {
+  background-color: #F9FAFB !important;
+}
+
+body.light-theme #view-community .bg-vellam-panel,
+body.light-theme #view-admin .bg-vellam-panel,
+body.light-theme #view-ranking .bg-vellam-panel {
+  background-color: #FFFFFF !important;
+  border-color: #D1D5DB !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme #view-community .bg-vellam-bg,
+body.light-theme #view-admin .bg-vellam-bg,
+body.light-theme #view-ranking .bg-vellam-bg {
+  background-color: #F3F4F6 !important;
+  border-color: #D1D5DB !important;
+}
+
+body.light-theme #view-community .text-white,
+body.light-theme #view-admin .text-white,
+body.light-theme #view-ranking .text-white {
+  color: #111827 !important;
+}
+
+body.light-theme #rep-mini-map .leaflet-control-zoom a {
+  background-color: #FFFFFF !important;
+  color: #0284c7 !important;
+  border-color: #D1D5DB !important;
+}
+
+/* ==============================================================================
+   UNIVERSAL LIGHT THEME ARCHITECTURE (Matte Carbon & Zinc System)
+   ============================================================================== */
+
+/* Universal Panel & Card Elevation */
+body.light-theme .bg-vellam-panel,
+body.light-theme [id*="guide-panel"],
+body.light-theme [id*="explainer"],
+body.light-theme [id*="beginner-guide"] {
+  background-color: #FFFFFF !important;
+  border-color: #D1D5DB !important;
+  color: #111827 !important;
+}
+
+body.light-theme .bg-vellam-card {
+  background-color: #F9FAFB !important;
+  border-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+body.light-theme .bg-vellam-bg {
+  background-color: #F3F4F6 !important;
+  border-color: #E5E7EB !important;
+}
+
+/* Universal Views Backgrounds and Text */
+body.light-theme #view-home,
+body.light-theme #view-gis,
+body.light-theme #view-sim,
+body.light-theme #view-usle,
+body.light-theme #view-landslides,
+body.light-theme #view-lab,
+body.light-theme #view-satellite,
+body.light-theme #view-reports,
+body.light-theme #view-community,
+body.light-theme #view-admin,
+body.light-theme #view-ranking {
+  background-color: #F3F4F6;
+  color: #111827;
+}
+
+/* Headings and Titles inside Views */
+body.light-theme h1,
+body.light-theme h2,
+body.light-theme h3,
+body.light-theme h4 {
+  color: #111827 !important;
+}
+
+/* Universal Modals & Overlays */
+body.light-theme #lab-dpr-modal > div,
+body.light-theme #lab-guide-modal > div,
+body.light-theme #drishti-photo-modal > div,
+body.light-theme #drishti-photo-modal-asset > div,
+body.light-theme #modal-map-fullview > div,
+body.light-theme #modal-admin-status > div,
+body.light-theme #accuracy-proof-modal > div,
+body.light-theme #universal-photo-modal > div,
+body.light-theme #admin-auth-modal > div {
+  background-color: #FFFFFF !important;
+  border-color: #D1D5DB !important;
+  color: #111827 !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Modal Headers & Footers */
+body.light-theme #lab-dpr-modal .border-b,
+body.light-theme #lab-dpr-modal .border-t,
+body.light-theme #lab-guide-modal .border-b,
+body.light-theme #lab-guide-modal .border-t,
+body.light-theme #drishti-photo-modal .border-b,
+body.light-theme #drishti-photo-modal .border-t,
+body.light-theme #modal-map-fullview .border-b,
+body.light-theme #modal-map-fullview .border-t,
+body.light-theme #accuracy-proof-modal .border-b,
+body.light-theme #accuracy-proof-modal .border-t {
+  border-color: #E5E7EB !important;
+}
+
+/* Universal Tables in Light Mode */
+body.light-theme table {
+  background-color: #FFFFFF !important;
+}
+
+body.light-theme table thead th {
+  background-color: #F9FAFB !important;
+  color: #4B5563 !important;
+  border-color: #E5E7EB !important;
+}
+
+body.light-theme table tbody tr {
+  color: #111827 !important;
+  border-color: #F3F4F6 !important;
+}
+
+body.light-theme table tbody tr:hover {
+  background-color: #F3F4F6 !important;
+}
+
+body.light-theme table tfoot tr {
+  background-color: #F9FAFB !important;
+  border-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+/* Badge, Pill, and Tag Color Harmonies in Light Mode */
+body.light-theme .bg-cyan-950,
+body.light-theme .bg-cyan-950\/80,
+body.light-theme .bg-cyan-950\/60,
+body.light-theme .bg-cyan-950\/40,
+body.light-theme .bg-cyan-950\/30,
+body.light-theme .bg-cyan-950\/20 {
+  background-color: #E0F2FE !important;
+  color: #0369A1 !important;
+  border-color: #BAE6FD !important;
+}
+
+body.light-theme .bg-emerald-950,
+body.light-theme .bg-emerald-950\/80,
+body.light-theme .bg-emerald-950\/60,
+body.light-theme .bg-emerald-950\/40,
+body.light-theme .bg-emerald-950\/30,
+body.light-theme .bg-emerald-950\/20 {
+  background-color: #DCFCE7 !important;
+  color: #15803D !important;
+  border-color: #BBF7D0 !important;
+}
+
+body.light-theme .bg-blue-950,
+body.light-theme .bg-blue-950\/80,
+body.light-theme .bg-blue-950\/60,
+body.light-theme .bg-blue-950\/40,
+body.light-theme .bg-blue-950\/30,
+body.light-theme .bg-blue-950\/20 {
+  background-color: #DBEAFE !important;
+  color: #1D4ED8 !important;
+  border-color: #BFDBFE !important;
+}
+
+body.light-theme .bg-amber-950,
+body.light-theme .bg-amber-950\/80,
+body.light-theme .bg-amber-950\/60,
+body.light-theme .bg-amber-950\/40,
+body.light-theme .bg-amber-950\/30,
+body.light-theme .bg-amber-950\/20 {
+  background-color: #FEF3C7 !important;
+  color: #B45309 !important;
+  border-color: #FDE68A !important;
+}
+
+body.light-theme .bg-purple-950,
+body.light-theme .bg-purple-950\/80,
+body.light-theme .bg-purple-950\/60,
+body.light-theme .bg-purple-950\/40,
+body.light-theme .bg-purple-950\/30,
+body.light-theme .bg-purple-950\/20 {
+  background-color: #F3E8FF !important;
+  color: #7E22CE !important;
+  border-color: #E9D5FF !important;
+}
+
+body.light-theme .bg-rose-950,
+body.light-theme .bg-rose-950\/80,
+body.light-theme .bg-rose-950\/60,
+body.light-theme .bg-rose-950\/40,
+body.light-theme .bg-rose-950\/30,
+body.light-theme .bg-rose-950\/20 {
+  background-color: #FFE4E6 !important;
+  color: #BE123C !important;
+  border-color: #FECDD3 !important;
+}
+
+body.light-theme .bg-slate-900,
+body.light-theme .bg-slate-950 {
+  background-color: #F3F4F6 !important;
+  color: #1F2937 !important;
+  border-color: #D1D5DB !important;
+}
+
+/* Executive Accent Typography in Light Mode */
+body.light-theme .text-cyan-300,
+body.light-theme .text-cyan-400 {
+  color: #0284C7 !important;
+}
+
+body.light-theme .text-emerald-300,
+body.light-theme .text-emerald-400 {
+  color: #059669 !important;
+}
+
+body.light-theme .text-blue-300,
+body.light-theme .text-blue-400 {
+  color: #2563EB !important;
+}
+
+body.light-theme .text-amber-300,
+body.light-theme .text-amber-400 {
+  color: #D97706 !important;
+}
+
+body.light-theme .text-purple-300,
+body.light-theme .text-purple-400 {
+  color: #7C3AED !important;
+}
+
+body.light-theme .text-rose-300,
+body.light-theme .text-rose-400 {
+  color: #E11D48 !important;
+}
+
+/* Fail-Safe Neutralizer for any lingering dark background utility classes */
+body.light-theme :not(#view-login):not(#view-login *) .bg-black\/30,
+body.light-theme :not(#view-login):not(#view-login *) .bg-black\/40,
+body.light-theme :not(#view-login):not(#view-login *) .bg-black\/50,
+body.light-theme :not(#view-login):not(#view-login *) .bg-black\/60 {
+  background-color: #F9FAFB !important;
+  border-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+/* ==============================================================================
+   ISRO BHUVAN SRISHTI & DRISHTI FLOOD HYDRODYNAMICS STYLING
+   ============================================================================== */
+@keyframes simRiverDash {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+.sim-river-pulse {
+  stroke-dasharray: 8, 6 !important;
+  animation: simRiverDash 1.2s linear infinite !important;
+  filter: drop-shadow(0 0 6px rgba(0, 245, 255, 0.75));
+}
+
+@keyframes drishtiPing {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  75%, 100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.drishti-pin-marker {
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.drishti-pin-marker:hover {
+  transform: scale(1.18);
+  z-index: 1000 !important;
+}
+
+.sim-hud-tooltip {
+  background: rgba(9, 13, 22, 0.94) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(56, 189, 248, 0.4) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  color: #f8fafc !important;
+  font-family: inherit !important;
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.75) !important;
+}
+
+.sim-hud-tooltip .leaflet-tooltip-pane {
+  z-index: 999 !important;
+}
+
+/* ==============================================================================
+   Completely Remove Leaflet Attribution, Flags and Watermarks Across All Maps
+   ============================================================================== */
+.leaflet-control-attribution,
+.leaflet-control-attribution * {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+/* Ensure Inundation Simulator tab fits seamlessly without any sliding / horizontal overflow */
+#view-inundation {
+  height: calc(100vh - 64px) !important;
+  max-height: calc(100vh - 64px) !important;
+  overflow: hidden !important;
+  overflow-x: hidden !important;
+  width: 100% !important;
+}
+
+#inundation-simulator-frame {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  overflow: hidden !important;
+}
