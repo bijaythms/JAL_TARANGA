@@ -27,8 +27,8 @@ try:
         GEMINI_API_KEY: str = Field(default="", validation_alias="GEMINI_API_KEY")
 
         # Networking & Server Configuration
-        HOST: str = os.getenv("HOST", "127.0.0.1")
-        PORT: int = 8000
+        HOST: str = Field(default="0.0.0.0", validation_alias="HOST")
+        PORT: int = Field(default=8000, validation_alias="PORT")
         CORS_ORIGINS: List[str] = ["*"]
 
         # Directories
@@ -57,7 +57,7 @@ except ImportError:
         DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://postgres:bijay@localhost:5432/vellam_db")
         GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
 
-        HOST: str = os.getenv("HOST", "127.0.0.1")
+        HOST: str = os.getenv("HOST", "0.0.0.0")
         PORT: int = int(os.getenv("PORT", "8000"))
         CORS_ORIGINS: List[str] = ["*"]
 

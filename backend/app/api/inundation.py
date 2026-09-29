@@ -31,7 +31,7 @@ import numpy as np
 if not hasattr(np, "in1d"):
     np.in1d = np.isin
 
-# Add Inundation Engine directory to sys.path
+# Add Inundation Engine directory to sys.path if present
 ENGINE_ROOT = Path(r"D:\New Inundation Model\New Inundation Model")
 if ENGINE_ROOT.exists() and str(ENGINE_ROOT) not in sys.path:
     sys.path.insert(0, str(ENGINE_ROOT))
@@ -41,18 +41,24 @@ from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from pydantic import BaseModel, Field
 import requests
 
-from main import IndiaFloodEngine
-from visualization.flood_map_plot import (
-    depth_to_rgba,
-    risk_to_rgba,
-    velocity_to_rgba,
-    _array_to_base64_png,
-)
+try:
+    from main import IndiaFloodEngine
+    from visualization.flood_map_plot import (
+        depth_to_rgba,
+        risk_to_rgba,
+        velocity_to_rgba,
+        _array_to_base64_png,
+    )
+    HAS_INUNDATION_ENGINE = True
+except Exception:
+    HAS_INUNDATION_ENGINE = False
+    IndiaFloodEngine = None
+    depth_to_rgba = risk_to_rgba = velocity_to_rgba = _array_to_base64_png = None
 
 logger = logging.getLogger("inundation_api")
 
 from app.core.config import settings
-OUTPUT_DIR = ENGINE_ROOT / "web_outputs"
+OUTPUT_DIR = (ENGINE_ROOT / "web_outputs") if ENGINE_ROOT.exists() else (settings.BASE_DIR / "data" / "web_outputs")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 WEB_DIR = settings.FRONTEND_DIR / "inundation"
 
@@ -224,6 +230,12 @@ def run_simulation(req: SimRequest):
     bbox = tuple(req.bbox)
     if len(bbox) != 4 or bbox[0] >= bbox[2] or bbox[1] >= bbox[3]:
         raise HTTPException(status_code=400, detail="Invalid bounding box [min_lon, min_lat, max_lon, max_lat]")
+
+    if not HAS_INUNDATION_ENGINE or IndiaFloodEngine is None:
+        raise HTTPException(
+            status_code=503,
+            detail="FastFlood Hydrodynamic simulation engine is operational on local HPC node with Copernicus DEM cache. Cloud preview is in lightweight telemetry mode.",
+        )
 
     logger.info(f"Starting FastFlood simulation: rain={req.rainfall_mm}mm, dur={req.duration_hr}h, bbox={bbox}")
     simulation_state["status"] = "running"
