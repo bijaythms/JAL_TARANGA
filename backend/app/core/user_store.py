@@ -813,8 +813,8 @@ def register_user(
         "email": clean_email,
         "full_name": clean_name,
         "role": assigned_role,
-        "designation": "Disaster Response Specialist",
-        "department": "Kerala State Disaster Management Authority (KSDMA)",
+        "designation": "tester",
+        "department": "gis",
         "password_hash": pwd_hash,
         "salt": salt,
         "created_at": now_iso,
@@ -832,7 +832,7 @@ def register_user(
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
                 """, (
                     user_id, clean_username, clean_email, clean_name, assigned_role,
-                    "Disaster Response Specialist", "KSDMA", pwd_hash, salt, True
+                    "tester", "gis", pwd_hash, salt, True
                 ))
             conn.commit()
         except Exception as e:

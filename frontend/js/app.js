@@ -2464,9 +2464,16 @@ async function renderAdminDashboard() {
       tbody.innerHTML = reports
         .map(
           (r) => {
-            const reporterBadge = r.reporter_role === 'officer'
-              ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1 w-max"><i data-lucide="shield" class="w-3 h-3"></i> Officer: ${r.reporter_name || 'Official'}</span>`
-              : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-800 flex items-center gap-1 w-max"><i data-lucide="user" class="w-3 h-3"></i> Citizen: ${r.reporter_name || 'Citizen'}</span>`;
+            const isOfficer = r.reporter_role === 'officer';
+            const cleanReporterName = isOfficer
+              ? (r.reporter_name || 'Official').replace(/^officer\s*:?\s*/i, '').trim()
+              : (r.reporter_name || 'Citizen');
+            const officerTitle = (r.reporter_designation && r.reporter_designation !== '-')
+              ? (r.reporter_designation.charAt(0).toUpperCase() + r.reporter_designation.slice(1))
+              : 'Tester';
+            const reporterBadge = isOfficer
+              ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1 w-max"><i data-lucide="shield" class="w-3 h-3"></i> ${officerTitle}: ${cleanReporterName}</span>`
+              : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-800 flex items-center gap-1 w-max"><i data-lucide="user" class="w-3 h-3"></i> Citizen: ${cleanReporterName}</span>`;
 
             return `
         <tr class="hover:bg-vellam-bg transition" id="row-${r.id}">

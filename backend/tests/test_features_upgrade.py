@@ -85,7 +85,7 @@ def test_citizen_report_submission_and_timeline():
         "report_id": report_id,
         "new_status": "Assigned",
         "remarks": "Rapid Response Team Alpha deployed to site.",
-        "assigned_to": "Officer Bijay Thomas"
+        "assigned_to": "Bijay Thomas"
     }
     update_res = client.post("/api/admin/update-status", json=status_payload, headers={"Authorization": f"Bearer {admin_token}"})
     assert update_res.status_code == 200
@@ -117,7 +117,7 @@ def test_officer_report_submission_and_admin_filtering():
         "location_name": "Idukki Dam Reservoir Spillway",
         "reporter_role": "officer",
         "reporter_id": "USR-OFF-001",
-        "reporter_name": "Officer Bijay Thomas"
+        "reporter_name": "Bijay Thomas"
     }
     res = client.post("/api/reports", json=officer_payload)
     assert res.status_code == 200

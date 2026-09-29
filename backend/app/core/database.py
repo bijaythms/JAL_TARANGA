@@ -276,61 +276,63 @@ def get_citizen_reports_from_db(
 
         query = """
             SELECT 
-                id, district, category, severity,
-                description as "desc",
-                reporter_email as email,
-                photo_data as image,
-                status,
-                latitude as lat,
-                longitude as lng,
-                COALESCE(location_name, '') as location_name,
-                COALESCE(reporter_role, 'citizen') as reporter_role,
-                COALESCE(reporter_id, '') as reporter_id,
-                COALESCE(reporter_name, '') as reporter_name,
-                COALESCE(upvotes, 0) as upvotes,
-                COALESCE(remarks, '') as remarks,
-                COALESCE(assigned_to, '') as assigned_to,
-                TO_CHAR(reported_at, 'YYYY-MM-DD HH24:MI') as "timestamp",
-                TO_CHAR(COALESCE(updated_at, reported_at), 'YYYY-MM-DD HH24:MI') as "updated_at"
-            FROM citizen_reports
+                cr.id, cr.district, cr.category, cr.severity,
+                cr.description as "desc",
+                cr.reporter_email as email,
+                cr.photo_data as image,
+                cr.status,
+                cr.latitude as lat,
+                cr.longitude as lng,
+                COALESCE(cr.location_name, '') as location_name,
+                COALESCE(cr.reporter_role, 'citizen') as reporter_role,
+                COALESCE(cr.reporter_id, '') as reporter_id,
+                COALESCE(cr.reporter_name, '') as reporter_name,
+                COALESCE(o.designation, '') as reporter_designation,
+                COALESCE(cr.upvotes, 0) as upvotes,
+                COALESCE(cr.remarks, '') as remarks,
+                COALESCE(cr.assigned_to, '') as assigned_to,
+                TO_CHAR(cr.reported_at, 'YYYY-MM-DD HH24:MI') as "timestamp",
+                TO_CHAR(COALESCE(cr.updated_at, cr.reported_at), 'YYYY-MM-DD HH24:MI') as "updated_at"
+            FROM citizen_reports cr
+            LEFT JOIN officers o ON (cr.reporter_id = o.id OR LOWER(cr.reporter_email) = LOWER(o.email) OR LOWER(cr.reporter_name) = LOWER(o.full_name) OR (o.username != '' AND POSITION(LOWER(o.username) IN LOWER(cr.reporter_name)) > 0))
         """
         clauses = []
         params = []
 
         or_clauses = []
         if user_id:
-            or_clauses.append("(reporter_id = %s OR LOWER(reporter_email) = LOWER(%s))")
+            or_clauses.append("(cr.reporter_id = %s OR LOWER(cr.reporter_email) = LOWER(%s))")
             params.extend([user_id, user_id])
 
         if user_ids and len(user_ids) > 0:
             clean_uids = [u.strip() for u in user_ids if u and u.strip()]
             if clean_uids:
-                or_clauses.append("reporter_id = ANY(%s)")
+                or_clauses.append("cr.reporter_id = ANY(%s)")
                 params.append(clean_uids)
 
         if emails and len(emails) > 0:
             clean_emails = [e.strip().lower() for e in emails if e and e.strip()]
             if clean_emails:
-                or_clauses.append("LOWER(reporter_email) = ANY(%s)")
+                or_clauses.append("LOWER(cr.reporter_email) = ANY(%s)")
                 params.append(clean_emails)
 
         if report_ids and len(report_ids) > 0:
             clean_rids = [r.strip() for r in report_ids if r and r.strip()]
             if clean_rids:
-                or_clauses.append("id = ANY(%s)")
+                or_clauses.append("cr.id = ANY(%s)")
                 params.append(clean_rids)
 
         if or_clauses:
             clauses.append("(" + " OR ".join(or_clauses) + ")")
 
         if reporter_role:
-            clauses.append("reporter_role = %s")
+            clauses.append("cr.reporter_role = %s")
             params.append(reporter_role)
 
         if clauses:
             query += " WHERE " + " AND ".join(clauses)
 
-        query += " ORDER BY reported_at DESC;"
+        query += " ORDER BY cr.reported_at DESC;"
 
         cur.execute(query, tuple(params))
         rows = cur.fetchall()
