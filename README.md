@@ -1,4 +1,4 @@
-# Jal Taranga — Kerala Geospatial Watershed & Hydro-Disaster Intelligence Platform
+# Jal Taranga — Geospatial Watershed & Hydro-Disaster Intelligence Platform
 
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-v0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -10,7 +10,7 @@
 [![Gemini](https://img.shields.io/badge/Google%20Gemini-2.5%20Flash-orange?logo=google&logoColor=white)](https://ai.google.dev/)
 [![ISRO Bhuvan](https://img.shields.io/badge/ISRO%20Bhuvan-SRISHTI%20%7C%20DRISHTI-green)](https://bhuvan.nrsc.gov.in/)
 
-> **"Rise Above Risk. Protect Kerala. From Data to Decisions. From Risk to Resilience."**  
+> **"Rise Above Risk. From Data to Decisions. From Risk to Resilience."**  
 > Engineered by **VISIONQUEST**
 
 ---
@@ -46,7 +46,7 @@
 
 **Jal Taranga** is an advanced Earth-observation, hydrological modeling, and disaster intelligence decision-support platform engineered specifically for the state of **Kerala, India**.
 
-### Why Kerala Needs Jal Taranga
+### What is the Need of Jal Taranga
 Kerala is uniquely vulnerable to climate-induced hydro-meteorological catastrophes:
 - **44 River Basins**: Traversing steep gradients from the Western Ghats (up to 2,695 m MSL at Anamudi) to the Arabian Sea within just 60 to 120 kilometers.
 - **Extreme Orographic Monsoons**: Annual precipitation between 2,500 mm to over 5,000 mm, causing rapid flood peaks and dangerously short basin times of concentration.
@@ -252,7 +252,8 @@ flowchart TD
 ```
 - **Backend Service**: `backend/app/services/hydrology.py` (`compute_water_accumulation`)
 - **Key Equation**:
-  $$V_{	ext{acc}} = \left( A_{	ext{basin}} 	imes rac{P}{1000} 	imes C ight) 	imes 0.48 	imes M_{	ext{surge}}$$
+  $$V_{	ext{acc}} = \left( A_{	ext{basin}} 	imes rac{P}{1000} 	imes C 
+ight) 	imes 0.48 	imes M_{	ext{surge}}$$
 
 ### 5.3 Western Ghats Geotechnical Slope Stability Workflow
 ```mermaid
@@ -282,7 +283,12 @@ flowchart LR
 ```
 - **Backend Service**: `backend/app/api/srishti.py` (`get_satellite_crop`)
 - **VARI Formulation**:
-  $$	ext{VARI} = rac{ho_{	ext{Green}} - ho_{	ext{Red}}}{ho_{	ext{Green}} + ho_{	ext{Red}} - ho_{	ext{Blue}}}$$
+  $$	ext{VARI} = rac{
+ho_{	ext{Green}} - 
+ho_{	ext{Red}}}{
+ho_{	ext{Green}} + 
+ho_{	ext{Red}} - 
+ho_{	ext{Blue}}}$$
 
 ### 5.5 AI Multimodal Watershed Mitigation Plan Workflow
 ```mermaid
@@ -574,9 +580,9 @@ Developed with dedication by **VISIONQUEST**. Built for the resilience, safety, 
 ### Core Team Members
 | Member | Role & Responsibilities |
 |---|---|
-| **Femin Johny** | **Team Leader & Project Lead** — Platform Architecture, Project Coordination & Full-Stack Systems |
-| **Rajana Jyothirmayi** | **Core Team & Researcher** — Hydrological Modeling, Disaster Analysis & Literature Provenance |
-| **Gayathry S R** | **Core Team & Researcher** — Multi-Spectral Earth Observation, Remote Sensing & Environmental Impact |
-| **Priyadarsan G P** | **Core Team & Engineer** — Geotechnical Engineering, Taylor Slope Stability & USLE Formulation |
-| **M.Aqeeb Baba** | **Core Team & Engineer** — Spatial GIS Pipelines, PostGIS Database Architecture & Backend REST APIs |
-| **Bijay Thomas** | **Core Team & Developer** — Frontend UI/UX, Dynamic Leaflet Mapping, Chart.js & Integration |
+| **Femin Johny** | **Team Leader & Project Lead** 
+| **Rajana Jyothirmayi** | **Core Team & Researcher** 
+| **Gayathry S R** | **Core Team & Researcher** 
+| **Priyadarsan G P** | **Core Team & Engineer** 
+| **M.Aqeeb Baba** | **Core Team & Engineer** 
+| **Bijay Thomas** | **Core Team & Developer**
