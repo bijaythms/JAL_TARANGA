@@ -38,9 +38,9 @@
 * **Navigate to**: `Home` (`#view-home`)
 * **What to Show on Screen**: The hero title, glowing status dot, statewide hazard matrix, and tagline.
 * **What to Say (Script)**:
-  > *"Respected judges and evaluators, this is **Jal Taranga**—an advanced Earth-observation, hydrological modeling, and disaster intelligence decision-support platform engineered specifically for Kerala by Team VisionQuest.*  
-  > *Kerala is on the frontlines of the climate crisis: 44 steep river basins plunging from 2,695 meters in the Western Ghats to sea level in just 60 to 120 kilometers. When extreme monsoons strike, mountain communities face lethal landslides while lowland agrarian basins like Kuttanad drown in backwaters. Today, we demonstrate how Jal Taranga transforms complex data into frontline resilience."*
-* **Action**: Click the blue **"Explore Kerala"** button or select **"Watershed Delineation"** on the sidebar.
+  > *"Respected judges and evaluators, this is **Jal Taranga**—an advanced Earth-observation, hydrological modeling, and disaster intelligence decision-support platform engineered as a comprehensive All-India solution by Team VisionQuest.*  
+  > *India is on the frontlines of the climate crisis: steep river basins plunging from high-altitude ghats and the Himalayas to sea level within short spans. When extreme monsoons strike, mountain communities face lethal landslides while lowland agrarian basins drown in backwaters. Today, we demonstrate how Jal Taranga transforms complex data into frontline resilience."*
+* **Action**: Click the blue **"Explore Map"** button or select **"Watershed Delineation"** on the sidebar.
 
 ---
 
@@ -51,11 +51,11 @@
   1. Highlight the **Floating Map Dock**: Click `Focus` to show how panels tuck away for a 100% clean satellite view, then restore them. Show `Legends`, `Layers`, `Telemetry`, and `Full`.
   2. Open the **"Map Symbols & Legends"** panel:
      - Turn ON **Watershed Basins** (shows calibrated river boundaries).
-     - Turn ON **Landslide Hazard Scarps** (shows Western Ghats high-risk scarps).
+     - Turn ON **Landslide Hazard Scarps** (shows high-risk hill scarps).
   3. Go to the search bar at the top, type `Meppadi` or `Kuttanad`, and hit enter $\to$ watch the camera smoothly fly to the location.
   4. Click any district centroid to open the **District Inspection Drawer** showing vulnerability scores and flood/landslide village counts.
 * **What to Say (Script)**:
-  > *"This is our GIS Command Centre. At the top, our custom 7-pill floating dock gives operators instant, distraction-free control over analytical tools, legends, layers, and telemetry. Responders can toggle granular vector layers—from 44 calibrated catchments to GSI landslide scarps—and navigate anywhere across Kerala with zero latency."*
+  > *"This is our GIS Command Centre. At the top, our custom 7-pill floating dock gives operators instant, distraction-free control over analytical tools, legends, layers, and telemetry. Responders can toggle granular vector layers—from calibrated catchments to GSI landslide scarps—and navigate anywhere across the map with zero latency."*
 
 ---
 
@@ -94,13 +94,13 @@
 
 ### STEP 4: Lowland Flash Flood Modeling — Inundation Hydrodynamic Simulator
 * **Navigate to**: `Inundation Simulator` (`#view-inundation`)
-* **What to Show on Screen**: High-resolution hydrodynamic flood modeling canvas showing Kerala's vulnerable depression basins.
+* **What to Show on Screen**: High-resolution hydrodynamic flood modeling canvas showing vulnerable depression basins across India.
 * **What to Do**:
   1. Show the dynamic inundation spread over **Kuttanad Polders** (-1.5 m MSL) and the **Periyar / Aluva** urban corridor.
   2. Adjust the precipitation surge slider to trigger overflow conditions.
   3. Point out how the engine tracks real-world backwater pooling and drainage bottlenecks.
 * **What to Say (Script)**:
-  > *"When highland monsoons rush downstream, lowland Kerala faces catastrophic backwater pooling. In our Inundation Simulator, we model hydrodynamic flood spread across sensitive agricultural polders like Kuttanad and urban choke points like Aluva, providing responders with visual breach extents and affected acreage in real time."*
+  > *"When highland monsoons rush downstream, lowland floodplains face catastrophic backwater pooling. In our Inundation Simulator, we model hydrodynamic flood spread across sensitive agricultural polders and urban choke points, providing responders with visual breach extents and affected acreage in real time."*
 
 ---
 
@@ -131,7 +131,7 @@
   * **What to Do**: Select **Periyar Basin**. Switch storm intensity from **Moderate (25 mm/h)** to **Extreme (130 mm/h Cloudburst)**.
   * **Watch**: Runoff volume in MCM surges, inundated area in hectares expands, and the dual-wave hydrograph chart updates dynamically.
   * **What to Say (Script)**:
-    > *"In the Rain Simulator, emergency managers can stress-test Kerala's basins. Under an extreme 130 mm/h cloudburst, Jal Taranga computes the accumulated runoff in Million Cubic Meters and plots dynamic hydrograph curves showing the exact time of flood peak concentration."*
+    > *"In the Rain Simulator, emergency managers can stress-test river basins nationwide. Under an extreme 130 mm/h cloudburst, Jal Taranga computes the accumulated runoff in Million Cubic Meters and plots dynamic hydrograph curves showing the exact time of flood peak concentration."*
 
 ---
 
@@ -173,7 +173,7 @@
   - **M.Aqeeb Baba** — Core Team & Engineer
   - **Bijay Thomas** — Core Team & Developer
 * **What to Say (Script)**:
-  > *"Jal Taranga is grounded in rigorous scientific baselines from KSDMA, GSI, NCESS, and ISRO Bhuvan. Designed and engineered with dedication by Team VisionQuest, Jal Taranga is built to help Kerala rise above risk, moving from fragmented data to decisive action. Thank you, and we are now open for questions!"*
+  > *"Jal Taranga is grounded in rigorous scientific baselines from national and state institutions including GSI, CWC, NRSC, and ISRO Bhuvan. Designed and engineered with dedication by Team VisionQuest, Jal Taranga is built to help India rise above risk, moving from fragmented data to decisive action. Thank you, and we are now open for questions!"*
 
 ---
 

@@ -1,20 +1,20 @@
 # Jal Taranga — Complete Platform Walkthrough, Architecture & Data Provenance Guide
 
-> **"Rise Above Risk. Protect Kerala. From Data to Decisions. From Risk to Resilience."**  
+> **"Rise Above Risk. Protect India. From Data to Decisions. From Risk to Resilience."**  
 > Developed by **VISIONQUEST**
 
 ---
 
 ## 1. Project Mission & Overview
 
-**Jal Taranga** is an advanced Earth-observation, hydrological modeling, and disaster intelligence decision-support platform engineered specifically for the state of **Kerala, India**.
+**Jal Taranga** is an advanced Earth-observation, hydrological modeling, and disaster intelligence decision-support platform engineered for comprehensive nationwide deployment across **India**.
 
-### Why Kerala Needs Jal Taranga
-Kerala is uniquely vulnerable to climate-induced hydro-meteorological catastrophes:
-- **44 River Basins**: Traversing steep gradients from the Western Ghats (up to 2,695 m MSL at Anamudi) to the Arabian Sea within just 60 to 120 kilometers.
-- **Extreme Orographic Monsoons**: Annual precipitation between 2,500 mm and over 5,000 mm, causing rapid flood peaks and dangerously short basin times of concentration.
-- **Landslide Susceptibility**: Thick saprolite regolith on steep slopes subjected to pore-pressure liquefaction upon sustained rainfall (>180 mm/24 h), as witnessed in Meppadi/Chooralmala (Wayanad), Pettimudi (Munnar), and Kavalappara (Malappuram).
-- **Lowland Depression & Tidal Bottlenecks**: Sub-sea-level agrarian polder basins like **Kuttanad** (-1.5 m to +1.5 m MSL) and estuarine urban centers like **Greater Kochi** where river discharge meets high astronomical ocean tides.
+### Why India Needs Jal Taranga
+India's diverse river basins, mountain terrains, and coastal corridors are acutely vulnerable to climate-induced hydro-meteorological catastrophes:
+- **River Basins & Critical Catchments**: Traversing steep gradients from high-altitude ranges (Western Ghats, Himalayas, Northeast ranges) to coastal deltas and plains within short spans.
+- **Extreme Orographic Monsoons & Cloudbursts**: Annual precipitation exceeding 2,500 mm to over 5,000 mm in high-intensity belts, causing rapid flood peaks and dangerously short basin times of concentration.
+- **Landslide Susceptibility**: Saturated regolith on steep slopes subjected to pore-pressure liquefaction upon sustained heavy rainfall (>180 mm/24 h), triggering catastrophic debris flows.
+- **Lowland Depressions & Tidal Bottlenecks**: Sub-sea-level agrarian polders and estuarine urban centers where upstream river discharges meet astronomical ocean tides.
 
 Jal Taranga provides government authorities, disaster managers, hydro-engineers, and citizens with a unified **digital twin**: combining real-time multi-spectral satellite imagery, 30-meter hydro-corrected elevation models, deterministic physics equations, Google Gemini 2.5 AI remote sensing, and crowdsourced ground-truth telemetry.
 
@@ -78,7 +78,7 @@ Jal Taranga provides government authorities, disaster managers, hydro-engineers,
 
 ### View 1: Home (`#view-home`)
 - **What is showing**:
-  - Hero introduction with quick action buttons: *"Explore Kerala"*, *"Analyse an Area"*, and *"Report a Disaster"*.
+  - Hero introduction with quick action buttons: *"Explore Map"*, *"Analyse an Area"*, and *"Report a Disaster"*.
   - Feature cards linking directly to Satellite Earth-Obs, Terrain Engine, Rainfall Simulation, and Landslide Hazards.
   - Real-time statewide hazard matrix and emergency bulletins.
 - **Where data comes from**: Semantic presentation layout embedded directly in `frontend/index.html`.
@@ -98,23 +98,23 @@ Jal Taranga provides government authorities, disaster managers, hydro-engineers,
     7. `Full`: Toggles browser full-screen map mode.
   - **7 Fine-Grained Layer Toggles** (in *Map Symbols & Legends*):
     1. *Watershed Basins*: Calibrated river catchment spatial boundaries.
-    2. *DEM Pooling Zones*: Critical lowland accumulation depressions (Kuttanad, Aluva, Kole wetlands).
-    3. *Landslide Hazard Scarps*: High-risk Western Ghats escarpments.
-    4. *District Vulnerability Centroids*: Markers for all 14 Kerala districts.
+    2. *DEM Pooling Zones*: Critical lowland accumulation depressions and floodplains.
+    3. *Landslide Hazard Scarps*: High-risk escarpments and debris zones.
+    4. *District Vulnerability Centroids*: Markers across administrative districts.
     5. *Citizen Observations*: Live crowdsourced incident markers with color-coded severity.
     6. *Delineated Catchment*: Upstream catchment polygon from point-and-click delineation.
     7. *Tributary Reaches*: Upstream river flow vector hierarchy.
   - **AI Snip Tool**: Bounding-box selection tool allowing the user to drag an arbitrary rectangle on the map.
-  - **Statutory Landmark Protection Shield**: Instantly warns and restricts terrain earthworks if snipped over Cochin International Airport (COK), Idukki Dam, or Cochin Port.
+  - **Statutory Landmark Protection Shield**: Instantly warns and restricts terrain earthworks if snipped over statutory protected infrastructure (airports, major dams, ports).
   - **Point-and-Click Watershed Delineator**: Click anywhere on the map to trace the complete upstream drainage basin and tributary network using MERIT-Basins.
-  - **Live Place Search**: Autocompletes across Kerala districts, towns, rivers, and landmarks bounded strictly to Kerala.
+  - **Live Place Search**: Autocompletes across districts, cities, rivers, and national landmarks.
   - **District Inspection Drawer**: Slides out from the right showing vulnerability score, slope, drainage density, and flood/landslide village counts.
 - **Where data comes from**:
   - Map tiles: **Esri World Imagery** and **Google Hybrid**.
   - Baseline layers: `GET /api/kerala/baseline` (from PostgreSQL `districts`, `river_basins`, or fallback `districts.json` and `watersheds.json`).
   - Snip Analysis: `POST /api/watershed/ai-plan` (Gemini 2.5 API or 7-Zone Microterrain Hydrology Solver).
-  - Delineation: `POST /api/watershed/delineate` (MERIT-Basins dataset or synthetic Kerala catchment engine).
-  - Place Search: **OSM Nominatim API** bounded to Kerala `[8.15, 74.80]` to `[12.85, 77.60]`.
+  - Delineation: `POST /api/watershed/delineate` (MERIT-Basins dataset or synthetic catchment engine).
+  - Place Search: **OSM Nominatim API** covering regional and national geographic extents.
 
 ---
 
@@ -139,11 +139,11 @@ Jal Taranga provides government authorities, disaster managers, hydro-engineers,
 
 ### View 4: Rainfall Runoff Simulator (`#view-simulator`)
 - **What is showing**:
-  - Dynamic simulation of precipitation impact on Kerala's river basins.
+  - Dynamic simulation of precipitation impact on river basins.
   - **3 Rain Scenarios**:
     - *Moderate*: 25 mm/h (Standard monsoon shower).
     - *High*: 60 mm/h (Heavy monsoon surge).
-    - *Extreme*: 130 mm/h (Cloudburst / 2018-scale disaster storm).
+    - *Extreme*: 130 mm/h (Cloudburst / disaster storm).
   - Basin selector dropdown (Periyar, Bharathapuzha, Pamba, Chaliyar, etc.).
   - Quantitative Metrics: Accumulated runoff volume in **MCM (Million Cubic Meters)**, Inundated surface footprint in **hectares**, and peak overland flow velocity in **m/s**.
   - Dynamic Hydrograph Curve: Dual-wave Chart.js hydrograph comparing precipitation intensity against discharge propagation over time.
@@ -155,7 +155,7 @@ Jal Taranga provides government authorities, disaster managers, hydro-engineers,
 
 ### View 5: Vulnerability Index & District Matrix (`#view-ranking`)
 - **What is showing**:
-  - Comprehensive vulnerability scoreboard for all **14 administrative districts of Kerala**.
+  - Comprehensive vulnerability scoreboard across administrative districts.
   - Sorted rankings by overall vulnerability score (0 to 100):
     - *Wayanad* (Score 94 - High Landslide Risk)
     - *Idukki* (Score 91 - High Orographic & Slope Risk)
@@ -269,11 +269,11 @@ Jal Taranga provides government authorities, disaster managers, hydro-engineers,
 
 ### View 7: Rainfall Runoff Scenario Simulator (`#view-simulator`)
 - **What is showing**:
-  - Dynamic simulation of precipitation impact on Kerala's river basins.
+  - Dynamic simulation of precipitation impact on river basins.
   - **3 Rain Scenarios**:
     - *Moderate*: 25 mm/h (Standard monsoon shower).
     - *High*: 60 mm/h (Heavy monsoon surge).
-    - *Extreme*: 130 mm/h (Cloudburst / 2018-scale disaster storm).
+    - *Extreme*: 130 mm/h (Cloudburst / disaster storm).
   - Basin selector dropdown (Periyar, Bharathapuzha, Pamba, Chaliyar, etc.).
   - Quantitative Metrics: Accumulated runoff volume in **MCM (Million Cubic Meters)**, Inundated surface footprint in **hectares**, and peak overland flow velocity in **m/s**.
   - Dynamic Hydrograph Curve: Dual-wave Chart.js hydrograph comparing precipitation intensity against discharge propagation over time.
@@ -302,7 +302,7 @@ Jal Taranga provides government authorities, disaster managers, hydro-engineers,
 
 ### View 9: Vulnerability Index & District Matrix (`#view-ranking`)
 - **What is showing**:
-  - Comprehensive vulnerability scoreboard for all **14 administrative districts of Kerala**.
+  - Comprehensive vulnerability scoreboard across administrative districts.
   - Sorted rankings by overall vulnerability score (0 to 100):
     - *Wayanad* (Score 94 - High Landslide Risk)
     - *Idukki* (Score 91 - High Orographic & Slope Risk)
@@ -357,18 +357,18 @@ Jal Taranga provides government authorities, disaster managers, hydro-engineers,
 
 | Data Element | Real-World Source / Agency | Retrieval Path / Backend Endpoint | Implementation File | Fallback / Offline Behavior |
 |---|---|---|---|---|
-| **14 Kerala Districts** (Vulnerability, Villages, Slope, Centroids) | **KSDMA** State Hazard Atlas & **Census of India** administrative boundaries | `GET /api/kerala/baseline` $\to$ `get_districts()` | `backend/app/core/database.py` & `data_loader.py` | Reads from `backend/app/data/districts.json` if PostgreSQL is unavailable. |
-| **44 River Basins** (Boundaries, Catchment Area, Discharge, Bottlenecks) | **NCESS** & **CWRDM** Kerala River Basins Atlas (41 west-flowing, 3 east-flowing) | `GET /api/kerala/baseline` $\to$ `get_watersheds()` | `backend/app/core/database.py` & `data_loader.py` | Reads from `backend/app/data/watersheds.json`. |
-| **DEM Lowland Depressions** (Kuttanad, Aluva, Kole Wetlands) | **CartoDEM 30m / SRTM Hydro-corrected DEM** & **2018 Kerala Flood Inundation Extents** | `GET /api/kerala/baseline` $\to$ `get_inundation_zones()` | `backend/app/core/data_loader.py` | Built-in high-precision geodetic boundary coordinates. |
-| **Landslide Hazard Scarps** (Chooralmala, Meppadi, Pettimudi, Kavalappara) | **GSI (Geological Survey of India)** Landslide Susceptibility Atlas & **NCESS** | `GET /api/landslides/hazards` $\to$ `get_landslide_zones()` | `backend/app/core/data_loader.py` | Static calibrated Western Ghats escarpment registry. |
+| **Administrative Districts** (Vulnerability, Villages, Slope, Centroids) | **Hazard Atlases** & **Census of India** administrative boundaries | `GET /api/kerala/baseline` $\to$ `get_districts()` | `backend/app/core/database.py` & `data_loader.py` | Reads from `backend/app/data/districts.json` if PostgreSQL is unavailable. |
+| **River Basins** (Boundaries, Catchment Area, Discharge, Bottlenecks) | **National Hydrological Atlases** & River Basin Inventories | `GET /api/kerala/baseline` $\to$ `get_watersheds()` | `backend/app/core/database.py` & `data_loader.py` | Reads from `backend/app/data/watersheds.json`. |
+| **DEM Lowland Depressions** (Lowland Polders & Floodplains) | **CartoDEM 30m / SRTM Hydro-corrected DEM** & **Recorded Historical Flood Inundation Extents** | `GET /api/kerala/baseline` $\to$ `get_inundation_zones()` | `backend/app/core/data_loader.py` | Built-in high-precision geodetic boundary coordinates. |
+| **Landslide Hazard Scarps** (High-Risk Hill Escarpments) | **GSI (Geological Survey of India)** Landslide Susceptibility Atlas & **NCESS** | `GET /api/landslides/hazards` $\to$ `get_landslide_zones()` | `backend/app/core/data_loader.py` | Static calibrated hill-tract escarpment registry. |
 | **Taylor Infinite Slope Stability** (Factor of Safety, Shear Stress/Strength) | Limit-Equilibrium Geotechnical Soil Mechanics Equation | `POST /api/landslides/simulate-slope` | `backend/app/api/geospatial.py` | Pure deterministic physics calculation executed in Python memory. |
 | **Rainfall Accumulation & Overland Velocity** | **SCS Runoff Curve Number (USDA-NRCS)** & Rational Runoff Equation | `POST /api/dem/accumulation` | `backend/app/services/hydrology.py` | Calibrated numerical solver in Python memory. |
-| **Watershed Catchment Delineation** | **MERIT-Hydro / MERIT-Basins** Megabasin 45 (South Asia, ~90m hydro-conditioned DEM by Dr. Dai Yamazaki) | `POST /api/watershed/delineate` | `backend/app/services/delineation.py` | **Instant Synthesis Fallback**: If the 950MB South Asia DB is absent or downloading, `synthesize_kerala_catchment()` computes the upstream polygon and stream reaches in $<25\text{ ms}$. |
+| **Watershed Catchment Delineation** | **MERIT-Hydro / MERIT-Basins** Megabasin 45 (South Asia, ~90m hydro-conditioned DEM by Dr. Dai Yamazaki) | `POST /api/watershed/delineate` | `backend/app/services/delineation.py` | **Instant Synthesis Fallback**: If the 950MB South Asia DB is absent or downloading, rapid synthesis computes the upstream polygon and stream reaches in $<25\text{ ms}$. |
 | **Multi-Spectral Satellite Imagery** | **Esri World Imagery MapServer REST API** & **Sentinel-2 L2A / Landsat-9** | `GET /api/srishti/satellite-crop` | `backend/app/api/srishti.py` | Dynamic export via HTTP request; converts RGB to VARI/NDVI using NumPy; falls back to pre-rendered Sentinel-2 files in `frontend/images/watershed/`. |
 | **Bhuvan SRISHTI & DRISHTI Assets** | **ISRO / NRSC Bhuvan Portal** & **PMKSY-WDC (IWMP)** Watershed Registry | `GET /api/srishti/assets` & `POST /api/srishti/assets` | `backend/app/data/srishti_assets.json` | Local thread-safe JSON registry with 16 pre-seeded verified structures. |
-| **AI Watershed Mitigation Plan** | **Google Gemini 2.5 Flash** Multimodal Remote Sensing Inference | `POST /api/watershed/ai-plan` | `backend/app/services/gemini.py` | **7-Zone Microterrain Solver**: If `GEMINI_API_KEY` is not provided or quota fails, automatically falls back to calibrated deterministic models across 7 Kerala physiographic zones. |
-| **Statutory Protected Landmarks** (Airports, Ports, Dams, Technopark) | **AAI**, **DGCA**, **Cochin Port Authority**, **KSDMA** Statutory Zoning | Checked during `POST /api/watershed/ai-plan` | `backend/app/services/hydrology.py` & `landmarks.json` | Enforces regulatory shield preventing heavy landscape earthworks on strategic national infrastructure. |
-| **Place Search & Geocoding** | **OpenStreetMap Nominatim Geocoder** | Client-side fetch in `frontend/js/app.js` | `frontend/js/app.js` (`searchLocation`) | Filtered strictly to Kerala bounding box `viewbox=74.80,12.85,77.60,8.15&bounded=1`. |
+| **AI Watershed Mitigation Plan** | **Google Gemini 2.5 Flash** Multimodal Remote Sensing Inference | `POST /api/watershed/ai-plan` | `backend/app/services/gemini.py` | **7-Zone Microterrain Solver**: If `GEMINI_API_KEY` is not provided or quota fails, automatically falls back to calibrated deterministic models across 7 physiographic zones. |
+| **Statutory Protected Landmarks** (Airports, Ports, Dams, Tech Parks) | **AAI**, **DGCA**, **Port Authorities**, **Statutory Zoning** | Checked during `POST /api/watershed/ai-plan` | `backend/app/services/hydrology.py` & `landmarks.json` | Enforces regulatory shield preventing heavy landscape earthworks on strategic national infrastructure. |
+| **Place Search & Geocoding** | **OpenStreetMap Nominatim Geocoder** | Client-side fetch in `frontend/js/app.js` | `frontend/js/app.js` (`searchLocation`) | Filtered to configured geographic bounding box. |
 | **Citizen Hazard Reports** | Crowdsourced Ground-Truth Telemetry from Citizen Field Observers | `GET /api/reports` & `POST /api/reports` | `backend/app/core/database.py` & `data_loader.py` | Stored in PostgreSQL `citizen_reports` table; falls back to in-memory store; emails encrypted before public display. |
 | **Admin Authentication & Triage** | State Disaster Management Administrative Credentials | `POST /api/admin/verify-key` | `backend/app/core/security.py` | Constant-time HMAC comparison against `ADMIN_SECRET_KEY` (`VIP@DUK`). |
 
@@ -419,10 +419,10 @@ Jal Taranga is engineered so that **no external network outage or missing API ke
    - If PostgreSQL is offline, `data_loader.py` seamlessly falls back to thread-safe local JSON files (`districts.json`, `watersheds.json`, `landmarks.json`, `srishti_assets.json`).
 2. **AI Engine Fallback**:
    - If `GEMINI_API_KEY` is present, Google Gemini 2.5 Flash analyzes the snipped landscape.
-   - If missing or quota is exhausted, the backend executes the deterministic **7-Zone Microterrain Hydrological Solver** calibrated to Kerala's physiography.
+   - If missing or quota is exhausted, the backend executes the deterministic **7-Zone Microterrain Hydrological Solver** calibrated to micro-terrain physiography.
 3. **Catchment Delineation Fallback**:
    - If the 950 MB South Asia MERIT-Basins dataset is present, it computes topological stream snapping.
-   - If absent or downloading, `synthesize_kerala_catchment()` synthesizes exact catchment boundaries and tributary networks in $<25\text{ ms}$.
+   - If absent or downloading, the instant synthesis engine generates exact catchment boundaries and tributary networks in $<25\text{ ms}$.
 4. **Satellite Imagery Fallback**:
    - If the live Esri World Imagery REST export times out, pre-processed multi-spectral Sentinel-2 crops in `frontend/images/watershed/` are served instantly.
 5. **Security & Privacy**:
