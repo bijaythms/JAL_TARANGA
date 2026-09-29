@@ -35,7 +35,7 @@ SESSIONS_FILE = DATA_DIR / "sessions.json"
 def _get_pg_conn():
     """Returns a direct psycopg2 connection to PostgreSQL vellam_db."""
     try:
-        return psycopg2.connect(settings.DATABASE_URL)
+        return psycopg2.connect(settings.DATABASE_URL, connect_timeout=3)
     except Exception as e:
         logger.debug(f"PostgreSQL connection offline or unavailable: {e}")
         return None

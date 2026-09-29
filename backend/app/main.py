@@ -52,10 +52,13 @@ app = FastAPI(
 
 @app.on_event("startup")
 def on_startup():
-    try:
-        ensure_schema_upgrades()
-    except Exception as e:
-        pass
+    import threading
+    def _bg_migration():
+        try:
+            ensure_schema_upgrades()
+        except Exception:
+            pass
+    threading.Thread(target=_bg_migration, daemon=True).start()
 
 # CORS Middleware Configuration
 app.add_middleware(

@@ -16,7 +16,7 @@ logger = logging.getLogger("vellam.database")
 
 def get_db_connection():
     """Returns a new psycopg2 connection using DATABASE_URL."""
-    return psycopg2.connect(settings.DATABASE_URL)
+    return psycopg2.connect(settings.DATABASE_URL, connect_timeout=3)
 
 
 def is_db_available() -> bool:
